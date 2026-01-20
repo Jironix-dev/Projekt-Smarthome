@@ -1,8 +1,10 @@
+from userinterface import SmartHomeUI
 from vision.handtracking import HandTracker
 
-def main():
+
+if __name__ == "__main__":
+    app = SmartHomeUI()
+    app.run()
     tracker = HandTracker()
     tracker.run()
 
-if __name__ == "__main__":
-    main()
