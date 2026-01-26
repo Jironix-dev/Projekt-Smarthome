@@ -1,5 +1,7 @@
 #Kevin Wesner
 #Smart Home UI Startseite
+#Erstellt am 26.01.26
+
 
 import pygame
 from ui.abmeldeknopf import LogoutButton
@@ -138,16 +140,18 @@ class SmartHomeUI:
                 if event.type == pygame.QUIT:
                     running = False
 
-                # Maus = Platzhalter für Gesten
+                # Mausklick, um ins Schlafzimmer zu wechseln
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    for room, rect in self.room_zones.items():
-                        if rect.collidepoint(event.pos):
-                            # Raum erneut klicken → abwählen
-                            if self.selected_room == room:
-                                self.selected_room = None
-                            else:
-                                self.selected_room = room
-                            break
+                    if self.current_view == "HOME":
+                        for room, rect in self.room_zones.items():
+                            if rect.collidepoint(event.pos):
+                                if room == "Schlafzimmer":
+                                    self.current_view = "SCHLAFZIMMER"
+                                else:
+                                    self.selected_room = room
+
+                    elif self.current_view == "SCHLAFZIMMER":
+                        self.schlafzimmer_view.handle_click(event.pos)
 
                 # Zustand wechseln (Platzhalter für Geste)
                 if event.type == pygame.KEYDOWN:
