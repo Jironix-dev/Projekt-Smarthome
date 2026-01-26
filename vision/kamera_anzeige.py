@@ -11,7 +11,7 @@ import pygame
 # ============================================
 # Setze auf 1, um das Kamerabild anzuzeigen
 # Setze auf 0, um das Kamerabild auszublenden
-KAMERA_ANZEIGE_AKTIV = 0
+KAMERA_ANZEIGE_AKTIV = 1
 # ============================================
 
 
