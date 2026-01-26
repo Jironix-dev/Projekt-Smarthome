@@ -10,9 +10,10 @@ from ui.abmeldeknopf import LogoutButton
 
 
 class HandTracker:
-    def __init__(self, width=1280, height=720):
-        self.width = width
-        self.height = height
+    def __init__(self, width=1280, height=720, ui=None):
+        self.ui = ui
+        self.width = ui.WIDTH
+        self.height = ui.HEIGHT
 
         # -----------------------------
         # Pygame Setup
@@ -61,6 +62,13 @@ class HandTracker:
         # Logout Button
         # -----------------------------
         self.logout_button = LogoutButton(x=20, y=20)
+
+        #Cursorpostiion speichern
+        self.cursor_x = None
+        self.cursor_y = None
+        self.smoothing_factor = 0.2
+        self.pinch_counter = 0
+        self.pinch_threshold = 2
 
         # Frame Counter
         self.frame_counter = 0
@@ -163,7 +171,7 @@ class HandTracker:
             self.draw_cursor(result)
 
             # FPS anzeigen
-            self.draw_fps()
+            #self.draw_fps()
 
             pygame.display.flip()
 
@@ -199,19 +207,14 @@ class HandTracker:
     # Kamera-Bild anzeigen
     # ---------------------------------------------------------
     def draw_frame(self, rgb_frame):
-        img_surface = pygame.image.frombuffer(
-            rgb_frame.tobytes(),
-            rgb_frame.shape[1::-1],
-            "RGB"
-        )
-        self.screen.blit(img_surface, (0, 0))
+        pass
 
 
     # ---------------------------------------------------------
     # Cursor zeichnen + Klicks + Logout-Trigger
     # ---------------------------------------------------------
     def draw_cursor(self, result):
-        if not result.multi_hand_landmarks or self.user_id is None:
+        if not result.multi_hand_landmarks or self.ui is None:
             return
 
         for hand_lms in result.multi_hand_landmarks:
@@ -223,10 +226,6 @@ class HandTracker:
             for id, lm in enumerate(hand_lms.landmark):
                 cx, cy = int(lm.x * self.width), int(lm.y * self.height)
 
-                # Landmark Nummern anzeigen
-                text = self.font.render(str(id), True, (255, 255, 0))
-                self.screen.blit(text, (cx - 10, cy - 10))
-
                 if id == 4:
                     thumb_tip = (cx, cy)
                 if id == 8:
@@ -234,18 +233,38 @@ class HandTracker:
 
             if thumb_tip and index_tip:
 
-                # Abstand berechnen
-                distance = math.hypot(
-                    index_tip[0] - thumb_tip[0],
-                    index_tip[1] - thumb_tip[1]
-                )
-
                 # Mittelpunkt
                 mid_x = (thumb_tip[0] + index_tip[0]) // 2
                 mid_y = (thumb_tip[1] + index_tip[1]) // 2
 
+                if self.cursor_x is None:
+                    self.cursor_x = mid_x
+                    self.cursor_y = mid_y
+                else:
+                    self.cursor_x = int(self.cursor_x * (1 - self.smoothing_factor) + mid_x * self.smoothing_factor)
+                    self.cursor_y = int(self.cursor_y * (1 - self.smoothing_factor) + mid_y * self.smoothing_factor)
+                
+                cursor_pos = (self.cursor_x, self.cursor_y)
+
+                distance = math.hypot(
+                    index_tip[0] - thumb_tip[0],
+                    index_tip[1] - thumb_tip[1]
+                )
                 # Pinch?
                 touching = distance < 40
+                if touching: 
+                    self.pinch_counter += 1
+                else:
+                    self.pinch_counter = 0
+                
+                pinch_active = self.pinch_counter >= self.pinch_threshold
+                
+                #Räume auf UI über Pinch
+                if pinch_active:
+                    for room, rect in self.ui.room_zones.items():
+                        if rect.collidepoint(self.cursor_x, self.cursor_y):
+                            self.ui.select_room(room)
+                            self.ui.toggle_room(room)
 
                 # Farbe
                 if touching:
@@ -256,11 +275,11 @@ class HandTracker:
                 # -------------------------------------------------
                 # LOGOUT-TRIGGER (Pinch + Button)
                 # -------------------------------------------------
-                if touching and not self.last_touching:
-                    if self.logout_button.is_clicked(mid_x, mid_y):
+                if pinch_active:
+                    if self.ui.logout_button.is_clicked(*cursor_pos):
                         self.pending_logout = True
                         self.login_allowed = False
-                        self.logout_button.set_pressed()
+                        self.ui.logout_button.set_pressed()
 
                 # -------------------------------------------------
                 # NORMALER LINKSKLICK LOG (nur einmal)

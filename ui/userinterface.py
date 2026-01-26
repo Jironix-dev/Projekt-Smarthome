@@ -1,7 +1,7 @@
 #Kevin Wesner
 #Smart Home UI Startseite
 import pygame
-
+from ui.abmeldeknopf import LogoutButton
 
 class SmartHomeUI:
     def __init__(self):
@@ -57,6 +57,20 @@ class SmartHomeUI:
 
         # Aktuell ausgewählter Raum
         self.selected_room = None
+        
+        #Logout Button
+        self.logout_button = LogoutButton(x=20, y=20)
+
+    #Handtracking erkennen
+    def toggle_room(self, room_name):
+        #Schaltet Raum ein und aus
+        if room_name in self.rooms:
+            self.rooms[room_name] = not self.rooms[room_name]
+
+    def select_room(self, room_name):
+        #Markiert einen Raum als ausgewählt
+        if room_name in self.rooms:
+            self.selected_room = room_name
 
     # -------- Hintergrund-Farbverlauf --------
     def draw_gradient(self, surface, top_color, bottom_color):
@@ -143,6 +157,9 @@ class SmartHomeUI:
             for room, rect in self.room_zones.items():
                 if room != self.selected_room:
                     self.draw_room(room, rect, self.rooms[room], False)
+
+            #Logout Button
+            self.logout_button.draw(self.screen)
 
             pygame.display.flip()
 
