@@ -292,6 +292,8 @@ class HandTracker:
     # Cursor zeichnen + Klicks + Logout-Trigger
     # ---------------------------------------------------------
     def draw_cursor(self, result):
+        pinch_active = False
+
         if not result.multi_hand_landmarks or self.ui is None:
             return
 
@@ -330,6 +332,11 @@ class HandTracker:
                 )
                 # Pinch?
                 touching = distance < 40
+
+                # Neues Flag für einmalige Auslösung pro Pinch
+                if pinch_active and not self.last_pinch_active:
+                    self.on_pinch(self.cursor_x, self.cursor_y)
+
                 if touching: 
                     self.pinch_counter += 1
                 else:
