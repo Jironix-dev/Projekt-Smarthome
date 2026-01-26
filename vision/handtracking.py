@@ -11,6 +11,8 @@ import math
 from vision.user_detection import UserDetector
 from logsystem.logger import Logger
 from ui.abmeldeknopf import LogoutButton
+from ui.knopf_beenden import ExitButton
+from ui.menu_knopf import MenuButton
 
 
 class HandTracker:
@@ -68,9 +70,19 @@ class HandTracker:
         self.last_touching = False
 
         # -----------------------------
-        # Logout Button
+        # Menu Button
         # -----------------------------
-        self.logout_button = LogoutButton(x=20, y=20)
+        self.menu_button = MenuButton(x=80, y=20)
+        
+        # -----------------------------
+        # Logout Button (nur im Menü sichtbar)
+        # -----------------------------
+        self.logout_button = LogoutButton(x=80, y=90)
+        
+        # -----------------------------
+        # Exit Button (nur im Menü sichtbar)
+        # -----------------------------
+        self.exit_button = ExitButton(x=80, y=160)
 
         #Cursorpostiion speichern
         self.cursor_x = None
@@ -129,6 +141,10 @@ class HandTracker:
 
                 # Button zurücksetzen
                 self.logout_button.reset()
+                
+                # Menü schließen
+                if self.menu_button.is_open:
+                    self.menu_button.toggle()
 
                 # Login erst wieder erlauben, wenn Timer abgelaufen ist
                 self.login_allowed = False
@@ -189,23 +205,32 @@ class HandTracker:
                 self.ui.draw_gradient(self.screen, (20, 25, 40), (10, 10, 10))
                 self.screen.blit(self.ui.floorplan, self.ui.floorplan_pos)
                 
-                # Draw overlay if room is selected
-                if self.ui.selected_room:
+                # Draw overlay if room is selected (nur wenn Menü nicht offen ist)
+                if self.ui.selected_room and not self.menu_button.is_open:
                     self.ui.draw_focus_overlay(self.ui.room_zones[self.ui.selected_room])
                 
-                # Draw all rooms
-                for room, rect in self.ui.room_zones.items():
-                    if room != self.ui.selected_room:
-                        self.ui.draw_room(room, rect, self.ui.rooms[room], False)
+                # Draw all rooms (nur wenn Menü nicht offen ist)
+                if not self.menu_button.is_open:
+                    for room, rect in self.ui.room_zones.items():
+                        if room != self.ui.selected_room:
+                            self.ui.draw_room(room, rect, self.ui.rooms[room], False)
             
             self.draw_landmarks(rgb_frame, result)
             self.draw_frame(rgb_frame)
+            
+            # Menu Overlay zeichnen (wenn Menü offen)
+            self.menu_button.draw_overlay(self.screen, self.width, self.height)
 
-            # Logout Button anzeigen
-            if self.ui:
-                self.ui.logout_button.draw(self.screen)
-            else:
+            # Menü-Knopf immer anzeigen
+            self.menu_button.draw(self.screen)
+
+            # Logout und Exit Buttons nur anzeigen, wenn Menü offen ist
+            if self.menu_button.is_open:
                 self.logout_button.draw(self.screen)
+                self.logout_button.update() if hasattr(self.logout_button, 'update') else None
+                
+                self.exit_button.draw(self.screen)
+                self.exit_button.update()
 
             # Cursor zeichnen
             self.draw_cursor(result)
@@ -276,17 +301,19 @@ class HandTracker:
 
             if thumb_tip and index_tip:
 
-                # Mittelpunkt
-                mid_x = (thumb_tip[0] + index_tip[0]) // 2
-                mid_y = (thumb_tip[1] + index_tip[1]) // 2
+                # Cursor auf Daumenspitze positionieren
+                thumb_x = thumb_tip[0]
+                thumb_y = thumb_tip[1]
 
                 if self.cursor_x is None:
-                    self.cursor_x = mid_x
-                    self.cursor_y = mid_y
+                    self.cursor_x = thumb_x
+                    self.cursor_y = thumb_y
                 else:
-                    self.cursor_x = int(self.cursor_x * (1 - self.smoothing_factor) + mid_x * self.smoothing_factor)
-                    self.cursor_y = int(self.cursor_y * (1 - self.smoothing_factor) + mid_y * self.smoothing_factor)
+                    self.cursor_x = int(self.cursor_x * (1 - self.smoothing_factor) + thumb_x * self.smoothing_factor)
+                    self.cursor_y = int(self.cursor_y * (1 - self.smoothing_factor) + thumb_y * self.smoothing_factor)
                 
+                cursor_pos = (self.cursor_x, self.cursor_y)
+
                 distance = math.hypot(
                     index_tip[0] - thumb_tip[0],
                     index_tip[1] - thumb_tip[1]
@@ -307,10 +334,17 @@ class HandTracker:
                 
                 #Räume auf UI über Pinch (only trigger once per pinch)
                 if pinch_active and not self.last_pinch_active:
-                    cursor_pos = (self.cursor_x, self.cursor_y)
-                    self.on_pinch(*cursor_pos)
+                    for room, rect in self.ui.room_zones.items():
+                        if rect.collidepoint(self.cursor_x, self.cursor_y):
+                            self.ui.select_room(room)
+                            self.ui.toggle_room(room)
+                            # Logging für Raum-Auswahl und Toggle
+                            room_state = "eingeschaltet" if self.ui.rooms[room] else "ausgeschaltet"
+                            self.logger.log(
+                                user=f"User {self.user_id}",
+                                action=f"{room} wurde {room_state}"
+                            )
 
-                self.last_pinch_active = pinch_active
                 # Farbe
                 if touching:
                     color = (255, 0, 0)
@@ -318,25 +352,50 @@ class HandTracker:
                     color = (0, 255, 255) if self.user_id == 1 else (0, 255, 0)
 
                 # -------------------------------------------------
-                # LOGOUT-TRIGGER (Pinch + Button)
+                # MENU-TRIGGER (Pinch + Menu Button)
                 # -------------------------------------------------
                 if pinch_active and not self.last_pinch_active:
-                    if self.ui.logout_button.is_clicked(self.cursor_x, self.cursor_y):
-                        self.pending_logout = True
-                        self.login_allowed = False
-                        self.ui.logout_button.set_pressed()
+                    if self.menu_button.is_clicked(*cursor_pos):
+                        self.menu_button.toggle()
+                        # Logging für Menü
+                        menu_state = "geöffnet" if self.menu_button.is_open else "geschlossen"
+                        self.logger.log(
+                            user=f"User {self.user_id}",
+                            action=f"Menü wurde {menu_state}"
+                        )
+                    
+                    # Nur Button-Aktionen erlauben, wenn Menü offen ist
+                    if self.menu_button.is_open:
+                        # -------------------------------------------------
+                        # LOGOUT-TRIGGER (Pinch + Button)
+                        # -------------------------------------------------
+                        if self.logout_button.is_clicked(*cursor_pos):
+                            self.pending_logout = True
+                            self.login_allowed = False
+                            self.logout_button.set_pressed()
+                            # Logging für Abmeldeknopf
+                            self.logger.log(
+                                user=f"User {self.user_id}",
+                                action="Abmeldeknopf wurde gedrückt"
+                            )
+                        
+                        # -------------------------------------------------
+                        # EXIT-TRIGGER (Pinch + Button)
+                        # -------------------------------------------------
+                        if self.exit_button.is_clicked(*cursor_pos):
+                            should_exit = self.exit_button.click()
+                            if should_exit:
+                                # Logging für Programm-Beendigung
+                                self.logger.log(
+                                    user=f"User {self.user_id}",
+                                    action="Programm beendet"
+                                )
+                                self.cap.release()
+                                pygame.quit()
+                                sys.exit()
                 
                 # Update pinch state for next frame
                 self.last_pinch_active = pinch_active
-
-                # -------------------------------------------------
-                # NORMALER LINKSKLICK LOG (nur einmal)
-                # -------------------------------------------------
-                if touching and not self.last_touching and not self.pending_logout:
-                    self.logger.log(
-                        user=f"User {self.user_id}",
-                        action="Linksklick ausgeführt"
-                    )
 
                 # Zustand speichern
                 self.last_touching = touching
