@@ -157,8 +157,16 @@ class SmartHomeUI:
                         self.rooms[self.selected_room] = not self.rooms[self.selected_room]
 
             # -------- ZEICHNEN --------
-            self.draw_gradient(self.screen, (20, 25, 40), (10, 10, 10))
-            self.screen.blit(self.floorplan, self.floorplan_pos)
+            if self.current_view == "HOME":
+                self.draw_gradient(self.screen, (20, 25, 40), (10, 10, 10))
+                self.screen.blit(self.floorplan, self.floorplan_pos)
+
+                for room, rect in self.room_zones.items():
+                    self.draw_room(room, rect, self.rooms[room], False)
+
+            elif self.current_view == "SCHLAFZIMMER":
+                self.schlafzimmer_view.draw()
+
 
             # Overlay nur, wenn ein Raum ausgewählt ist
             if self.selected_room:

@@ -255,6 +255,8 @@ class HandTracker:
     # Cursor zeichnen + Klicks + Logout-Trigger
     # ---------------------------------------------------------
     def draw_cursor(self, result):
+        pinch_active = False
+
         if not result.multi_hand_landmarks or self.ui is None:
             return
 
@@ -285,14 +287,17 @@ class HandTracker:
                     self.cursor_x = int(self.cursor_x * (1 - self.smoothing_factor) + mid_x * self.smoothing_factor)
                     self.cursor_y = int(self.cursor_y * (1 - self.smoothing_factor) + mid_y * self.smoothing_factor)
                 
-                cursor_pos = (self.cursor_x, self.cursor_y)
-
                 distance = math.hypot(
                     index_tip[0] - thumb_tip[0],
                     index_tip[1] - thumb_tip[1]
                 )
                 # Pinch?
                 touching = distance < 40
+
+                # Neues Flag für einmalige Auslösung pro Pinch
+                if pinch_active and not self.last_pinch_active:
+                    self.on_pinch(self.cursor_x, self.cursor_y)
+
                 if touching: 
                     self.pinch_counter += 1
                 else:
@@ -302,11 +307,10 @@ class HandTracker:
                 
                 #Räume auf UI über Pinch (only trigger once per pinch)
                 if pinch_active and not self.last_pinch_active:
-                    for room, rect in self.ui.room_zones.items():
-                        if rect.collidepoint(self.cursor_x, self.cursor_y):
-                            self.ui.select_room(room)
-                            self.ui.toggle_room(room)
+                    cursor_pos = (self.cursor_x, self.cursor_y)
+                    self.on_pinch(*cursor_pos)
 
+                self.last_pinch_active = pinch_active
                 # Farbe
                 if touching:
                     color = (255, 0, 0)
@@ -317,7 +321,7 @@ class HandTracker:
                 # LOGOUT-TRIGGER (Pinch + Button)
                 # -------------------------------------------------
                 if pinch_active and not self.last_pinch_active:
-                    if self.ui.logout_button.is_clicked(*cursor_pos):
+                    if self.ui.logout_button.is_clicked(self.cursor_x, self.cursor_y):
                         self.pending_logout = True
                         self.login_allowed = False
                         self.ui.logout_button.set_pressed()
