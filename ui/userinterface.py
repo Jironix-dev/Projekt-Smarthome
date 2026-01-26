@@ -169,7 +169,7 @@ class SmartHomeUI:
             if self.current_view == "HOME":
                 if self.current_view == "HOME":
                 # Home View zeichnen
-                self.draw_gradient(self.screen, (20, 25, 40), (10, 10, 10))
+                    self.draw_gradient(self.screen, (20, 25, 40), (10, 10, 10))
                     self.screen.blit(self.floorplan, self.floorplan_pos)
 
                 for room, rect in self.room_zones.items():

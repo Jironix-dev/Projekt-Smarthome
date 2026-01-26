@@ -168,3 +168,11 @@ Datum     | Uhrzeit | Nutzer| Aktion
 26.01.2026|13:15:16|User 1|Anmeldung erfolgreich
 26.01.2026|13:15:18|User 1|Menü wurde geöffnet
 26.01.2026|13:15:21|User 1|Programm beendet
+26.01.2026|13:20:43|User 1|Anmeldung erfolgreich
+26.01.2026|13:20:46|User 1|Zu Schlafzimmer gewechselt
+26.01.2026|13:20:48|User 1|Menü wurde geöffnet
+26.01.2026|13:20:50|User 1|Zurück zur HOME-View
+26.01.2026|13:20:53|User 1|Menü wurde geschlossen
+26.01.2026|13:20:56|User 1|Zu Schlafzimmer gewechselt
+26.01.2026|13:21:00|User 1|Menü wurde geöffnet
+26.01.2026|13:21:02|User 1|Programm beendet
