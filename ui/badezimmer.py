@@ -1,19 +1,19 @@
 # Kevin Wesner
 # 26.01.26
-# Schlafzimmer Nahaufnahme mit den Widgets
+# Badezimmer Nahaufnahme mit den Widgets
 
 import pygame
 from ui.zuruck_knopf import BackButton
 
 
-class SchlafzimmerView:
+class BadezimmerView:
     def __init__(self, ui):
         self.ui = ui
         self.screen = ui.screen
         self.font = ui.font
 
-        # Schlafzimmer-Bild laden
-        self.image = pygame.image.load("Bilder/Schlafzimmer.png").convert_alpha()
+        # Badezimmer-Bild laden
+        self.image = pygame.image.load("Bilder/Badezimmer.png").convert_alpha()
 
         self.image = pygame.transform.scale(self.image, (ui.WIDTH, ui.HEIGHT))
 

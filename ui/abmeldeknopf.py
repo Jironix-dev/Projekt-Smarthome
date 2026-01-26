@@ -1,20 +1,21 @@
-#Name: Kevin Dietrich
-#Datum: 26.01.2026
-#Projekt: Smart-Home
+# Name: Kevin Dietrich
+# Datum: 26.01.2026
+# Projekt: Smart-Home
 
 import pygame
+
 
 class LogoutButton:
     def __init__(self, x, y, width=120, height=50):
         self.rect = pygame.Rect(x, y, width, height)
 
         # Normalzustand
-        self.color_normal = (200, 0, 0)      # Rot
-        self.text_normal = (255, 255, 255)   # Weiß
+        self.color_normal = (200, 0, 0)  # Rot
+        self.text_normal = (255, 255, 255)  # Weiß
 
         # Gedrückt-Zustand
-        self.color_pressed = (120, 0, 0)     # Dunkleres Rot
-        self.text_pressed = (0, 0, 0)        # Schwarz
+        self.color_pressed = (120, 0, 0)  # Dunkleres Rot
+        self.text_pressed = (0, 0, 0)  # Schwarz
 
         # Aktuelle Farben
         self.current_color = self.color_normal
@@ -29,7 +30,7 @@ class LogoutButton:
             screen,
             self.current_color,
             self.rect,
-            border_radius=self.radius
+            border_radius=self.radius,
         )
 
         text_surface = self.font.render("Abmelden", True, self.current_text_color)

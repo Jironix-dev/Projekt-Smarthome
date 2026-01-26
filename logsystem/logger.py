@@ -1,6 +1,6 @@
-#Name: Kevin Dietrich
-#Datum: 26.01.2026
-#Projekt: Smart-Home
+# Name: Kevin Dietrich
+# Datum: 26.01.2026
+# Projekt: Smart-Home
 
 import csv
 import os

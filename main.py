@@ -1,19 +1,25 @@
-#Name: Kevin Dietrich, Kevin Wesner
-#Datum: 26.01.2026
-#Projekt: Smart-Home
+# Name: Kevin Dietrich, Kevin Wesner
+# Datum: 26.01.2026
+# Projekt: Smart-Home
+
+"""Startpunkt des Smart-Home Programms.
+
+Dieses Modul erstellt die UI-Instanz und den HandTracker und startet die
+Hauptschleife. Es ist der Einstiegspunkt (`__main__`).
+"""
 
 from ui.userinterface import SmartHomeUI
 from vision.handtracking import HandTracker
 import threading
 
+
 if __name__ == "__main__":
-    # -------- 1. UI erstellen --------
+    # UI erstellen
     app = SmartHomeUI()
 
-    # -------- 2. HandTracker erstellen --------
+    # HandTracker erstellen und mit der UI verbinden
     tracker = HandTracker(width=app.WIDTH, height=app.HEIGHT, ui=app)
 
-    # -------- 3. HandTracker in Hauptthread starten --------
-    # The main run loop handles both hand tracking and UI display
+    # Hauptschleife starten (HandTracker führt das Rendering und Tracking)
     tracker.run()
 

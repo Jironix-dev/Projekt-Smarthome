@@ -1,6 +1,6 @@
-#Name: Kevin Dietrich
-#Datum: 26.01.2026
-#Projekt: Smart-Home
+# Name: Kevin Dietrich
+# Datum: 26.01.2026
+# Projekt: Smart-Home
 
 import pygame
 import time
@@ -11,13 +11,13 @@ class ExitButton:
         self.rect = pygame.Rect(x, y, width, height)
 
         # Normalzustand
-        self.color_normal = (100, 100, 100)      # Grau
-        self.text_normal = (255, 255, 255)       # Weiß
+        self.color_normal = (100, 100, 100)  # Grau
+        self.text_normal = (255, 255, 255)  # Weiß
         self.text_content_normal = "Beenden"
 
         # Bestätigungszustand
-        self.color_confirm = (255, 165, 0)       # Orange
-        self.text_confirm = (0, 0, 0)            # Schwarz
+        self.color_confirm = (255, 165, 0)  # Orange
+        self.text_confirm = (0, 0, 0)  # Schwarz
         self.text_content_confirm = "Sicher?"
 
         # Aktuelle Werte
@@ -29,7 +29,7 @@ class ExitButton:
         self.is_confirming = False
         self.confirm_time = None
         self.confirm_timeout = 5.0  # 5 Sekunden
-        
+
         self.radius = 10
         pygame.font.init()
         self.font = pygame.font.SysFont("Arial", 24, bold=True)
@@ -40,7 +40,7 @@ class ExitButton:
             screen,
             self.current_color,
             self.rect,
-            border_radius=self.radius
+            border_radius=self.radius,
         )
 
         text_surface = self.font.render(self.current_text_content, True, self.current_text_color)
@@ -69,7 +69,7 @@ class ExitButton:
         """Aktualisiert den Zustand des Knopfs (z.B. Timeout-Check)."""
         if self.is_confirming and self.confirm_time is not None:
             elapsed_time = time.time() - self.confirm_time
-            
+
             if elapsed_time > self.confirm_timeout:
                 # Timeout → Zurücksetzen zu Normalzustand
                 self.reset()
