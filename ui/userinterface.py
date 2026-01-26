@@ -7,6 +7,7 @@ import pygame
 from ui.abmeldeknopf import LogoutButton
 from ui.knopf_beenden import ExitButton
 from ui.menu_knopf import MenuButton
+from ui.Schlafzimmer import SchlafzimmerView
 
 class SmartHomeUI:
     def __init__(self):
@@ -63,6 +64,9 @@ class SmartHomeUI:
         # Aktuell ausgewählter Raum
         self.selected_room = None
         
+        # Aktuelle Ansicht (HOME oder SCHLAFZIMMER)
+        self.current_view = "HOME"
+        
         # Menu Button
         self.menu_button = MenuButton(x=20, y=20)
         
@@ -71,6 +75,9 @@ class SmartHomeUI:
         
         # Exit Button (nur im Menü sichtbar)
         self.exit_button = ExitButton(x=20, y=160)
+        
+        # Schlafzimmer-View
+        self.schlafzimmer_view = SchlafzimmerView(self)
 
     #Handtracking erkennen
     def toggle_room(self, room_name):
@@ -159,20 +166,26 @@ class SmartHomeUI:
                         self.rooms[self.selected_room] = not self.rooms[self.selected_room]
 
             # -------- ZEICHNEN --------
-            self.draw_gradient(self.screen, (20, 25, 40), (10, 10, 10))
-            self.screen.blit(self.floorplan, self.floorplan_pos)
+            if self.current_view == "HOME":
+                # Home View zeichnen
+                self.draw_gradient(self.screen, (20, 25, 40), (10, 10, 10))
+                self.screen.blit(self.floorplan, self.floorplan_pos)
 
-            # Overlay nur, wenn ein Raum ausgewählt ist
-            if self.selected_room:
-                self.draw_focus_overlay(self.room_zones[self.selected_room])
+                # Overlay nur, wenn ein Raum ausgewählt ist
+                if self.selected_room:
+                    self.draw_focus_overlay(self.room_zones[self.selected_room])
 
-            # Alle Räume zeichnen, nicht ausgewählte
-            for room, rect in self.room_zones.items():
-                if room != self.selected_room:
-                    self.draw_room(room, rect, self.rooms[room], False)
+                # Alle Räume zeichnen, nicht ausgewählte
+                for room, rect in self.room_zones.items():
+                    if room != self.selected_room:
+                        self.draw_room(room, rect, self.rooms[room], False)
 
-            #Logout Button
-            self.logout_button.draw(self.screen)
+                # Logout Button
+                self.logout_button.draw(self.screen)
+            
+            elif self.current_view == "SCHLAFZIMMER":
+                # Schlafzimmer View zeichnen
+                self.schlafzimmer_view.draw()
 
             pygame.display.flip()
 

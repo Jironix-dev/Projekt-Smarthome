@@ -33,6 +33,15 @@ class HandTracker:
         # Update UI screen reference to use this single screen
         if self.ui:
             self.ui.screen = self.screen
+            # Verwende die Buttons von der UI statt eigene zu erstellen
+            self.menu_button = self.ui.menu_button
+            self.logout_button = self.ui.logout_button
+            self.exit_button = self.ui.exit_button
+        else:
+            # Fallback: Erstelle Buttons, wenn keine UI vorhanden ist
+            self.menu_button = MenuButton(x=80, y=20)
+            self.logout_button = LogoutButton(x=80, y=90)
+            self.exit_button = ExitButton(x=80, y=160)
 
         # -----------------------------
         # MediaPipe Setup
@@ -69,20 +78,6 @@ class HandTracker:
         self.logger = Logger()
         self.last_touching = False
 
-        # -----------------------------
-        # Menu Button
-        # -----------------------------
-        self.menu_button = MenuButton(x=80, y=20)
-        
-        # -----------------------------
-        # Logout Button (nur im Menü sichtbar)
-        # -----------------------------
-        self.logout_button = LogoutButton(x=80, y=90)
-        
-        # -----------------------------
-        # Exit Button (nur im Menü sichtbar)
-        # -----------------------------
-        self.exit_button = ExitButton(x=80, y=160)
 
         #Cursorpostiion speichern
         self.cursor_x = None
@@ -200,32 +195,49 @@ class HandTracker:
             # Clear screen once
             self.screen.fill((0, 0, 0))
             
-            # Draw UI background and rooms if UI is available
+            # Draw UI based on current view
             if self.ui:
-                self.ui.draw_gradient(self.screen, (20, 25, 40), (10, 10, 10))
-                self.screen.blit(self.ui.floorplan, self.ui.floorplan_pos)
+                if self.ui.current_view == "HOME":
+                    # HOME VIEW
+                    self.ui.draw_gradient(self.screen, (20, 25, 40), (10, 10, 10))
+                    self.screen.blit(self.ui.floorplan, self.ui.floorplan_pos)
+                    
+                    # Draw overlay if room is selected (nur wenn Menü nicht offen ist)
+                    if self.ui.selected_room and not self.menu_button.is_open:
+                        self.ui.draw_focus_overlay(self.ui.room_zones[self.ui.selected_room])
+                    
+                    # Draw all rooms (nur wenn Menü nicht offen ist)
+                    if not self.menu_button.is_open:
+                        for room, rect in self.ui.room_zones.items():
+                            if room != self.ui.selected_room:
+                                self.ui.draw_room(room, rect, self.ui.rooms[room], False)
                 
-                # Draw overlay if room is selected (nur wenn Menü nicht offen ist)
-                if self.ui.selected_room and not self.menu_button.is_open:
-                    self.ui.draw_focus_overlay(self.ui.room_zones[self.ui.selected_room])
-                
-                # Draw all rooms (nur wenn Menü nicht offen ist)
-                if not self.menu_button.is_open:
-                    for room, rect in self.ui.room_zones.items():
-                        if room != self.ui.selected_room:
-                            self.ui.draw_room(room, rect, self.ui.rooms[room], False)
+                elif self.ui.current_view == "SCHLAFZIMMER":
+                    # SCHLAFZIMMER VIEW
+                    self.ui.schlafzimmer_view.draw()
             
             self.draw_landmarks(rgb_frame, result)
             self.draw_frame(rgb_frame)
             
-            # Menu Overlay zeichnen (wenn Menü offen)
-            self.menu_button.draw_overlay(self.screen, self.width, self.height)
+            # Menu Overlay zeichnen (wenn Menü offen) - in allen Views
+            if self.ui and self.menu_button.is_open:
+                self.menu_button.draw_overlay(self.screen, self.width, self.height)
+            
+            # Menü-Knopf und Buttons nur in HOME-View anzeigen (werden von Views in anderen Screens gezeichnet)
+            if self.ui and self.ui.current_view == "HOME":
+                # Menü-Knopf nur in HOME-View anzeigen
+                self.menu_button.draw(self.screen)
 
-            # Menü-Knopf immer anzeigen
-            self.menu_button.draw(self.screen)
-
-            # Logout und Exit Buttons nur anzeigen, wenn Menü offen ist
-            if self.menu_button.is_open:
+                # Logout und Exit Buttons nur anzeigen, wenn Menü offen ist
+                if self.menu_button.is_open:
+                    self.logout_button.draw(self.screen)
+                    self.logout_button.update() if hasattr(self.logout_button, 'update') else None
+                    
+                    self.exit_button.draw(self.screen)
+                    self.exit_button.update()
+            
+            # In SCHLAFZIMMER-View: Logout und Exit Buttons zeichnen, wenn Menü offen
+            elif self.ui and self.ui.current_view == "SCHLAFZIMMER" and self.menu_button.is_open:
                 self.logout_button.draw(self.screen)
                 self.logout_button.update() if hasattr(self.logout_button, 'update') else None
                 
@@ -329,14 +341,23 @@ class HandTracker:
                 if pinch_active and not self.last_pinch_active:
                     for room, rect in self.ui.room_zones.items():
                         if rect.collidepoint(self.cursor_x, self.cursor_y):
-                            self.ui.select_room(room)
-                            self.ui.toggle_room(room)
-                            # Logging für Raum-Auswahl und Toggle
-                            room_state = "eingeschaltet" if self.ui.rooms[room] else "ausgeschaltet"
-                            self.logger.log(
-                                user=f"User {self.user_id}",
-                                action=f"{room} wurde {room_state}"
-                            )
+                            if room == "Schlafzimmer":
+                                # Schlafzimmer: Wechsel zur Detail-View
+                                self.ui.current_view = "SCHLAFZIMMER"
+                                self.logger.log(
+                                    user=f"User {self.user_id}",
+                                    action=f"Zu {room} gewechselt"
+                                )
+                            else:
+                                # Andere Räume: Normale Toggle-Logik
+                                self.ui.select_room(room)
+                                self.ui.toggle_room(room)
+                                # Logging für Raum-Auswahl und Toggle
+                                room_state = "eingeschaltet" if self.ui.rooms[room] else "ausgeschaltet"
+                                self.logger.log(
+                                    user=f"User {self.user_id}",
+                                    action=f"{room} wurde {room_state}"
+                                )
 
                 # Farbe
                 if touching:
@@ -348,7 +369,17 @@ class HandTracker:
                 # MENU-TRIGGER (Pinch + Menu Button)
                 # -------------------------------------------------
                 if pinch_active and not self.last_pinch_active:
+                    # Zurück-Button in Schlafzimmer-View
+                    if self.ui and self.ui.current_view == "SCHLAFZIMMER":
+                        if self.ui.schlafzimmer_view.back_button.is_clicked(*cursor_pos):
+                            self.ui.current_view = "HOME"
+                            self.logger.log(
+                                user=f"User {self.user_id}",
+                                action="Zurück zur HOME-View"
+                            )
+                    
                     if self.menu_button.is_clicked(*cursor_pos):
+                        print(f"DEBUG: Menu Button clicked! Current position: {cursor_pos}, Menu button rect: {self.menu_button.rect}")
                         self.menu_button.toggle()
                         # Logging für Menü
                         menu_state = "geöffnet" if self.menu_button.is_open else "geschlossen"

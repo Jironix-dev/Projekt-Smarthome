@@ -15,3 +15,4 @@ Git-Push:
 -test4, README erstellt und unnötige Bilder gelöscht
 -test5, blinkender Cursor und Knöpfe gefixed
 -test7, erstellen eines Menüs, welches einen Abmelde und einen Beenden Knopf enthält. Bugfixing.
+-test8, Pinch-Geste auf dem Schlafzimmer Knopf öffnet auch die Schlafzimmer ansicht. Dort verschwinden die Knöpfe "Schlafzimmer" und "Wohnzimmer" und es erscheinen neue Knöpfe "Menü" und "Zurück" welche auch voll funktionsfähig sind. Drückt man auf "Zurück", kehrt man zum Grundriss zurück.

@@ -11,7 +11,7 @@ if __name__ == "__main__":
     app = SmartHomeUI()
 
     # -------- 2. HandTracker erstellen --------
-    tracker = HandTracker(ui=app)
+    tracker = HandTracker(width=app.WIDTH, height=app.HEIGHT, ui=app)
 
     # -------- 3. HandTracker in Hauptthread starten --------
     # The main run loop handles both hand tracking and UI display
