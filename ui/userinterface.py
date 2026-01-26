@@ -90,14 +90,20 @@ class SmartHomeUI:
         if room_name in self.rooms:
             self.selected_room = room_name
 
-    # -------- Hintergrund-Farbverlauf --------
+    # -------- Hintergrund-Farbverlauf (optimiert) --------
     def draw_gradient(self, surface, top_color, bottom_color):
-        for y in range(self.HEIGHT):
-            ratio = y / self.HEIGHT
-            r = int(top_color[0] * (1 - ratio) + bottom_color[0] * ratio)
-            g = int(top_color[1] * (1 - ratio) + bottom_color[1] * ratio)
-            b = int(top_color[2] * (1 - ratio) + bottom_color[2] * ratio)
-            pygame.draw.line(surface, (r, g, b), (0, y), (self.WIDTH, y))
+        # Erstelle Gradient einmalig als Oberfläche
+        if not hasattr(self, '_gradient_cache') or self._gradient_cache is None:
+            gradient_surf = pygame.Surface((self.WIDTH, self.HEIGHT))
+            for y in range(self.HEIGHT):
+                ratio = y / self.HEIGHT
+                r = int(top_color[0] * (1 - ratio) + bottom_color[0] * ratio)
+                g = int(top_color[1] * (1 - ratio) + bottom_color[1] * ratio)
+                b = int(top_color[2] * (1 - ratio) + bottom_color[2] * ratio)
+                pygame.draw.line(gradient_surf, (r, g, b), (0, y), (self.WIDTH, y))
+            self._gradient_cache = gradient_surf
+        
+        surface.blit(self._gradient_cache, (0, 0))
 
     # -------- Raum zeichnen --------
     def draw_room(self, name, rect, active, selected):
