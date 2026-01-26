@@ -2,6 +2,7 @@
 #Smart Home UI Startseite
 #Erstellt am 26.01.26
 
+
 import pygame
 from ui.abmeldeknopf import LogoutButton
 from ui.Schlafzimmer import SchlafzimmerView

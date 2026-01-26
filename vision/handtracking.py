@@ -1,3 +1,7 @@
+#Name: Kevin Dietrich, Kevin Wesner
+#Datum: 26.01.2026
+#Projekt: Smart-Home
+
 import cv2
 import mediapipe as mp
 import pygame
@@ -12,16 +16,21 @@ from ui.abmeldeknopf import LogoutButton
 class HandTracker:
     def __init__(self, width=1280, height=720, ui=None):
         self.ui = ui
-        self.width = ui.WIDTH
-        self.height = ui.HEIGHT
+        self.width = width
+        self.height = height
 
         # -----------------------------
-        # Pygame Setup
+        # Pygame Setup (single window for both tracking and UI)
         # -----------------------------
         pygame.init()
         self.screen = pygame.display.set_mode((width, height))
         pygame.display.set_caption("Handtracking – Klassenstruktur")
+        self.clock = pygame.time.Clock()
         self.font = pygame.font.SysFont("Arial", 30, bold=True)
+        
+        # Update UI screen reference to use this single screen
+        if self.ui:
+            self.ui.screen = self.screen
 
         # -----------------------------
         # MediaPipe Setup
@@ -72,6 +81,9 @@ class HandTracker:
 
         # Frame Counter
         self.frame_counter = 0
+        
+        # Pinch state tracking (prevent repeated actions)
+        self.last_pinch_active = False
 
 
     # ---------------------------------------------------------
@@ -79,6 +91,7 @@ class HandTracker:
     # ---------------------------------------------------------
     def run(self):
         while True:
+            self.clock.tick(60)  # Limit to 60 FPS
             self.handle_events()
 
             # Kamera-Frame lesen
@@ -133,7 +146,8 @@ class HandTracker:
             # LOGIN-PHASE
             # -------------------------------------------------
             if not self.login_done and self.login_allowed and self.login_cooldown == 0:
-                self.draw_frame(rgb_frame)
+                # Clear screen - only show login message
+                self.screen.fill((0, 0, 0))
 
                 login_text = self.font.render(
                     "Bitte Geste zeigen: Faust = User 1, Offene Hand = User 2",
@@ -146,6 +160,12 @@ class HandTracker:
                     self.user_id = user
                     self.login_done = True
                     self.login_allowed = False
+                    
+                    # Reset logout button on successful login
+                    if self.ui:
+                        self.ui.logout_button.reset()
+                    else:
+                        self.logout_button.reset()
 
                     # LOGIN LOGGEN
                     self.logger.log(
@@ -161,11 +181,31 @@ class HandTracker:
             # -------------------------------------------------
             self.frame_counter += 1
 
+            # Clear screen once
+            self.screen.fill((0, 0, 0))
+            
+            # Draw UI background and rooms if UI is available
+            if self.ui:
+                self.ui.draw_gradient(self.screen, (20, 25, 40), (10, 10, 10))
+                self.screen.blit(self.ui.floorplan, self.ui.floorplan_pos)
+                
+                # Draw overlay if room is selected
+                if self.ui.selected_room:
+                    self.ui.draw_focus_overlay(self.ui.room_zones[self.ui.selected_room])
+                
+                # Draw all rooms
+                for room, rect in self.ui.room_zones.items():
+                    if room != self.ui.selected_room:
+                        self.ui.draw_room(room, rect, self.ui.rooms[room], False)
+            
             self.draw_landmarks(rgb_frame, result)
             self.draw_frame(rgb_frame)
 
             # Logout Button anzeigen
-            self.logout_button.draw(self.screen)
+            if self.ui:
+                self.ui.logout_button.draw(self.screen)
+            else:
+                self.logout_button.draw(self.screen)
 
             # Cursor zeichnen
             self.draw_cursor(result)
@@ -173,6 +213,7 @@ class HandTracker:
             # FPS anzeigen
             #self.draw_fps()
 
+            # Single display update per frame
             pygame.display.flip()
 
         self.cap.release()
@@ -259,8 +300,8 @@ class HandTracker:
                 
                 pinch_active = self.pinch_counter >= self.pinch_threshold
                 
-                #Räume auf UI über Pinch
-                if pinch_active:
+                #Räume auf UI über Pinch (only trigger once per pinch)
+                if pinch_active and not self.last_pinch_active:
                     for room, rect in self.ui.room_zones.items():
                         if rect.collidepoint(self.cursor_x, self.cursor_y):
                             self.ui.select_room(room)
@@ -275,11 +316,14 @@ class HandTracker:
                 # -------------------------------------------------
                 # LOGOUT-TRIGGER (Pinch + Button)
                 # -------------------------------------------------
-                if pinch_active:
+                if pinch_active and not self.last_pinch_active:
                     if self.ui.logout_button.is_clicked(*cursor_pos):
                         self.pending_logout = True
                         self.login_allowed = False
                         self.ui.logout_button.set_pressed()
+                
+                # Update pinch state for next frame
+                self.last_pinch_active = pinch_active
 
                 # -------------------------------------------------
                 # NORMALER LINKSKLICK LOG (nur einmal)
@@ -297,10 +341,10 @@ class HandTracker:
                 # CURSOR ZEICHNEN
                 # -------------------------------------------------
                 if self.user_id == 1:
-                    pygame.draw.circle(self.screen, color, (mid_x, mid_y), 10)
+                    pygame.draw.circle(self.screen, color, (self.cursor_x, self.cursor_y), 10)
 
                 elif self.user_id == 2:
-                    rect = pygame.Rect(mid_x - 10, mid_y - 10, 20, 20)
+                    rect = pygame.Rect(self.cursor_x - 10, self.cursor_y - 10, 20, 20)
                     pygame.draw.rect(self.screen, color, rect)
 
 
