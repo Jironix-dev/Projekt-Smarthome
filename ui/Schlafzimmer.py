@@ -3,6 +3,7 @@
 #Schlafzimmer Nahaufnahme mit den Widgets
 
 import pygame
+from ui.zuruck_knopf import BackButton
 
 class SchlafzimmerView:
     def __init__(self, ui):
@@ -20,22 +21,26 @@ class SchlafzimmerView:
             (ui.WIDTH, ui.HEIGHT)
         )
 
-        # Zurück-Button
-        self.back_button = pygame.Rect(20, ui.HEIGHT - 80, 200, 50)
+        # Menu Button wird von der UI bereitgestellt
+        self.menu_button = ui.menu_button
+        
+        # Zurück-Button neben dem Menü-Button
+        # Menu Button hat Größe 80x60 (width, height) bei Position (20, 20)
+        # Zurück-Button soll rechts daneben sein
+        back_button_x = self.menu_button.rect.x + self.menu_button.rect.width + 10  # 10px Abstand
+        back_button_y = self.menu_button.rect.y
+        self.back_button = BackButton(x=back_button_x, y=back_button_y, width=80, height=60)
 
     def draw(self):
         # Hintergrund
         self.screen.blit(self.image, (0, 0))
 
-        # Zurück-Button
-        pygame.draw.rect(self.screen, (50, 50, 50), self.back_button, border_radius=10)
-        text = self.font.render("← Zurück", True, (255, 255, 255))
-        self.screen.blit(
-            text,
-            (self.back_button.centerx - text.get_width() // 2,
-             self.back_button.centery - text.get_height() // 2)
-        )
+        # Menu Button zeichnen
+        self.menu_button.draw(self.screen)
+        
+        # Zurück-Button zeichnen
+        self.back_button.draw(self.screen)
 
     def handle_click(self, pos):
-        if self.back_button.collidepoint(pos):
+        if self.back_button.is_clicked(pos[0], pos[1]):
             self.ui.current_view = "HOME"

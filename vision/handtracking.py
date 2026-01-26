@@ -9,6 +9,7 @@ import sys
 import math
 
 from vision.user_detection import UserDetector
+from vision.kamera_anzeige import KameraAnzeige
 from logsystem.logger import Logger
 from ui.abmeldeknopf import LogoutButton
 from ui.knopf_beenden import ExitButton
@@ -33,14 +34,25 @@ class HandTracker:
         # Update UI screen reference to use this single screen
         if self.ui:
             self.ui.screen = self.screen
+            # Verwende die Buttons von der UI statt eigene zu erstellen
+            self.menu_button = self.ui.menu_button
+            self.logout_button = self.ui.logout_button
+            self.exit_button = self.ui.exit_button
+        else:
+            # Fallback: Erstelle Buttons, wenn keine UI vorhanden ist
+            self.menu_button = MenuButton(x=80, y=20)
+            self.logout_button = LogoutButton(x=80, y=90)
+            self.exit_button = ExitButton(x=80, y=160)
 
         # -----------------------------
         # MediaPipe Setup
         # -----------------------------
         self.mp_hands = mp.solutions.hands
         self.hands = self.mp_hands.Hands(
-            max_num_hands=2,
-            min_detection_confidence=0.7
+            static_image_mode=False,
+            max_num_hands=1,  # Nur eine Hand tracken für bessere Performance
+            min_detection_confidence=0.5,
+            min_tracking_confidence=0.5
         )
         self.mp_draw = mp.solutions.drawing_utils
 
@@ -50,6 +62,9 @@ class HandTracker:
         self.cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
         self.cap.set(3, width)
         self.cap.set(4, height)
+        # Performance-Optimierungen
+        self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)  # Buffer auf 1 Frame limitieren
+        self.cap.set(cv2.CAP_PROP_FPS, 30)  # FPS auf 30 setzen
 
         # -----------------------------
         # Login / User Detection
@@ -69,25 +84,11 @@ class HandTracker:
         self.logger = Logger()
         self.last_touching = False
 
-        # -----------------------------
-        # Menu Button
-        # -----------------------------
-        self.menu_button = MenuButton(x=80, y=20)
-        
-        # -----------------------------
-        # Logout Button (nur im Menü sichtbar)
-        # -----------------------------
-        self.logout_button = LogoutButton(x=80, y=90)
-        
-        # -----------------------------
-        # Exit Button (nur im Menü sichtbar)
-        # -----------------------------
-        self.exit_button = ExitButton(x=80, y=160)
 
         #Cursorpostiion speichern
         self.cursor_x = None
         self.cursor_y = None
-        self.smoothing_factor = 0.2
+        self.smoothing_factor = 0.7  # Höher = schneller folgen (70% neue Position, 30% alte)
         self.pinch_counter = 0
         self.pinch_threshold = 2
 
@@ -96,6 +97,9 @@ class HandTracker:
         
         # Pinch state tracking (prevent repeated actions)
         self.last_pinch_active = False
+        
+        # Kamera-Anzeige initialisieren
+        self.kamera_anzeige = KameraAnzeige(width, height)
 
 
     # ---------------------------------------------------------
@@ -103,8 +107,7 @@ class HandTracker:
     # ---------------------------------------------------------
     def run(self):
         while True:
-            self.clock.tick(60)  # Limit to 60 FPS
-            self.handle_events()
+            self.clock.tick(60)  # 60 FPS - schneller ist auf den meisten Systemen nicht nötig
 
             # Kamera-Frame lesen
             success, frame = self.cap.read()
@@ -117,6 +120,7 @@ class HandTracker:
 
             # Bild spiegeln
             frame = cv2.flip(frame, 1)
+            # RGB-Konvertierung optimiert
             rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
             # MediaPipe verarbeiten
@@ -200,32 +204,51 @@ class HandTracker:
             # Clear screen once
             self.screen.fill((0, 0, 0))
             
-            # Draw UI background and rooms if UI is available
+            # Draw UI based on current view
             if self.ui:
-                self.ui.draw_gradient(self.screen, (20, 25, 40), (10, 10, 10))
-                self.screen.blit(self.ui.floorplan, self.ui.floorplan_pos)
+                if self.ui.current_view == "HOME":
+                    # HOME VIEW
+                    self.ui.draw_gradient(self.screen, (20, 25, 40), (10, 10, 10))
+                    self.screen.blit(self.ui.floorplan, self.ui.floorplan_pos)
+                    
+                    # Draw overlay if room is selected (nur wenn Menü nicht offen ist)
+                    if self.ui.selected_room and not self.menu_button.is_open:
+                        self.ui.draw_focus_overlay(self.ui.room_zones[self.ui.selected_room])
+                    
+                    # Draw all rooms (nur wenn Menü nicht offen ist)
+                    if not self.menu_button.is_open:
+                        for room, rect in self.ui.room_zones.items():
+                            if room != self.ui.selected_room:
+                                self.ui.draw_room(room, rect, self.ui.rooms[room], False)
                 
-                # Draw overlay if room is selected (nur wenn Menü nicht offen ist)
-                if self.ui.selected_room and not self.menu_button.is_open:
-                    self.ui.draw_focus_overlay(self.ui.room_zones[self.ui.selected_room])
-                
-                # Draw all rooms (nur wenn Menü nicht offen ist)
-                if not self.menu_button.is_open:
-                    for room, rect in self.ui.room_zones.items():
-                        if room != self.ui.selected_room:
-                            self.ui.draw_room(room, rect, self.ui.rooms[room], False)
+                elif self.ui.current_view == "SCHLAFZIMMER":
+                    # SCHLAFZIMMER VIEW
+                    self.ui.schlafzimmer_view.draw()
             
-            self.draw_landmarks(rgb_frame, result)
+            # Landmarks-Visualisierung deaktiviert für bessere Performance
+            # (nicht notwendig für Funktionalität)
+            # self.draw_landmarks(rgb_frame, result)
             self.draw_frame(rgb_frame)
             
-            # Menu Overlay zeichnen (wenn Menü offen)
-            self.menu_button.draw_overlay(self.screen, self.width, self.height)
+            # Menu Overlay zeichnen (wenn Menü offen) - in allen Views
+            if self.ui and self.menu_button.is_open:
+                self.menu_button.draw_overlay(self.screen, self.width, self.height)
+            
+            # Menü-Knopf und Buttons nur in HOME-View anzeigen (werden von Views in anderen Screens gezeichnet)
+            if self.ui and self.ui.current_view == "HOME":
+                # Menü-Knopf nur in HOME-View anzeigen
+                self.menu_button.draw(self.screen)
 
-            # Menü-Knopf immer anzeigen
-            self.menu_button.draw(self.screen)
-
-            # Logout und Exit Buttons nur anzeigen, wenn Menü offen ist
-            if self.menu_button.is_open:
+                # Logout und Exit Buttons nur anzeigen, wenn Menü offen ist
+                if self.menu_button.is_open:
+                    self.logout_button.draw(self.screen)
+                    self.logout_button.update() if hasattr(self.logout_button, 'update') else None
+                    
+                    self.exit_button.draw(self.screen)
+                    self.exit_button.update()
+            
+            # In SCHLAFZIMMER-View: Logout und Exit Buttons zeichnen, wenn Menü offen
+            elif self.ui and self.ui.current_view == "SCHLAFZIMMER" and self.menu_button.is_open:
                 self.logout_button.draw(self.screen)
                 self.logout_button.update() if hasattr(self.logout_button, 'update') else None
                 
@@ -234,6 +257,9 @@ class HandTracker:
 
             # Cursor zeichnen
             self.draw_cursor(result)
+
+            # Kamera-Feed in der unteren rechten Ecke anzeigen (wenn aktiviert)
+            self.kamera_anzeige.draw_camera_feed(self.screen, rgb_frame)
 
             # FPS anzeigen
             #self.draw_fps()
@@ -321,6 +347,12 @@ class HandTracker:
                 # Pinch?
                 touching = distance < 40
 
+                # Farbe definieren (wird später für Cursor-Zeichnung benötigt)
+                if touching:
+                    color = (255, 0, 0)
+                else:
+                    color = (0, 255, 255) if self.user_id == 1 else (0, 255, 0)
+
                 # Neues Flag für einmalige Auslösung pro Pinch
                 if pinch_active and not self.last_pinch_active:
                     self.on_pinch(self.cursor_x, self.cursor_y)
@@ -334,42 +366,26 @@ class HandTracker:
                 
                 #Räume auf UI über Pinch (only trigger once per pinch)
                 if pinch_active and not self.last_pinch_active:
-                    for room, rect in self.ui.room_zones.items():
-                        if rect.collidepoint(self.cursor_x, self.cursor_y):
-                            self.ui.select_room(room)
-                            self.ui.toggle_room(room)
-                            # Logging für Raum-Auswahl und Toggle
-                            room_state = "eingeschaltet" if self.ui.rooms[room] else "ausgeschaltet"
+                    # Wenn Menü offen ist: Nur Menü-Buttons verarbeiten
+                    if self.menu_button.is_open:
+                        # Zurück-Button in Schlafzimmer-View
+                        if self.ui and self.ui.current_view == "SCHLAFZIMMER":
+                            if self.ui.schlafzimmer_view.back_button.is_clicked(*cursor_pos):
+                                # Zurück-Button in Schlafzimmer-View ist nicht sichtbar wenn Menü offen
+                                pass
+                        
+                        # Menu Button Toggle
+                        if self.menu_button.is_clicked(*cursor_pos):
+                            self.menu_button.toggle()
+                            # Logging für Menü
+                            menu_state = "geöffnet" if self.menu_button.is_open else "geschlossen"
                             self.logger.log(
                                 user=f"User {self.user_id}",
-                                action=f"{room} wurde {room_state}"
+                                action=f"Menü wurde {menu_state}"
                             )
-
-                # Farbe
-                if touching:
-                    color = (255, 0, 0)
-                else:
-                    color = (0, 255, 255) if self.user_id == 1 else (0, 255, 0)
-
-                # -------------------------------------------------
-                # MENU-TRIGGER (Pinch + Menu Button)
-                # -------------------------------------------------
-                if pinch_active and not self.last_pinch_active:
-                    if self.menu_button.is_clicked(*cursor_pos):
-                        self.menu_button.toggle()
-                        # Logging für Menü
-                        menu_state = "geöffnet" if self.menu_button.is_open else "geschlossen"
-                        self.logger.log(
-                            user=f"User {self.user_id}",
-                            action=f"Menü wurde {menu_state}"
-                        )
-                    
-                    # Nur Button-Aktionen erlauben, wenn Menü offen ist
-                    if self.menu_button.is_open:
-                        # -------------------------------------------------
+                        
                         # LOGOUT-TRIGGER (Pinch + Button)
-                        # -------------------------------------------------
-                        if self.logout_button.is_clicked(*cursor_pos):
+                        elif self.logout_button.is_clicked(*cursor_pos):
                             self.pending_logout = True
                             self.login_allowed = False
                             self.logout_button.set_pressed()
@@ -379,10 +395,8 @@ class HandTracker:
                                 action="Abmeldeknopf wurde gedrückt"
                             )
                         
-                        # -------------------------------------------------
                         # EXIT-TRIGGER (Pinch + Button)
-                        # -------------------------------------------------
-                        if self.exit_button.is_clicked(*cursor_pos):
+                        elif self.exit_button.is_clicked(*cursor_pos):
                             should_exit = self.exit_button.click()
                             if should_exit:
                                 # Logging für Programm-Beendigung
@@ -393,6 +407,57 @@ class HandTracker:
                                 self.cap.release()
                                 pygame.quit()
                                 sys.exit()
+                        
+                        # Wenn außerhalb aller Menü-Buttons gepincht wird: Menü schließen
+                        else:
+                            self.menu_button.toggle()
+                            self.logger.log(
+                                user=f"User {self.user_id}",
+                                action="Menü wurde geschlossen"
+                            )
+                    
+                    # Menü ist NICHT offen: Normal funktionieren
+                    else:
+                        # Zurück-Button in Schlafzimmer-View
+                        if self.ui and self.ui.current_view == "SCHLAFZIMMER":
+                            if self.ui.schlafzimmer_view.back_button.is_clicked(*cursor_pos):
+                                self.ui.current_view = "HOME"
+                                self.logger.log(
+                                    user=f"User {self.user_id}",
+                                    action="Zurück zur HOME-View"
+                                )
+                        
+                        # Menu Button
+                        if self.menu_button.is_clicked(*cursor_pos):
+                            self.menu_button.toggle()
+                            # Logging für Menü
+                            menu_state = "geöffnet" if self.menu_button.is_open else "geschlossen"
+                            self.logger.log(
+                                user=f"User {self.user_id}",
+                                action=f"Menü wurde {menu_state}"
+                            )
+                        
+                        # Räume (nur wenn Menü nicht offen)
+                        else:
+                            for room, rect in self.ui.room_zones.items():
+                                if rect.collidepoint(self.cursor_x, self.cursor_y):
+                                    if room == "Schlafzimmer":
+                                        # Schlafzimmer: Wechsel zur Detail-View
+                                        self.ui.current_view = "SCHLAFZIMMER"
+                                        self.logger.log(
+                                            user=f"User {self.user_id}",
+                                            action=f"Zu {room} gewechselt"
+                                        )
+                                    else:
+                                        # Andere Räume: Normale Toggle-Logik
+                                        self.ui.select_room(room)
+                                        self.ui.toggle_room(room)
+                                        # Logging für Raum-Auswahl und Toggle
+                                        room_state = "eingeschaltet" if self.ui.rooms[room] else "ausgeschaltet"
+                                        self.logger.log(
+                                            user=f"User {self.user_id}",
+                                            action=f"{room} wurde {room_state}"
+                                        )
                 
                 # Update pinch state for next frame
                 self.last_pinch_active = pinch_active

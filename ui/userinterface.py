@@ -7,6 +7,7 @@ import pygame
 from ui.abmeldeknopf import LogoutButton
 from ui.knopf_beenden import ExitButton
 from ui.menu_knopf import MenuButton
+from ui.Schlafzimmer import SchlafzimmerView
 
 class SmartHomeUI:
     def __init__(self):
@@ -63,6 +64,9 @@ class SmartHomeUI:
         # Aktuell ausgewählter Raum
         self.selected_room = None
         
+        # Aktuelle Ansicht (HOME oder SCHLAFZIMMER)
+        self.current_view = "HOME"
+        
         # Menu Button
         self.menu_button = MenuButton(x=20, y=20)
         
@@ -71,6 +75,9 @@ class SmartHomeUI:
         
         # Exit Button (nur im Menü sichtbar)
         self.exit_button = ExitButton(x=20, y=160)
+        
+        # Schlafzimmer-View
+        self.schlafzimmer_view = SchlafzimmerView(self)
 
     #Handtracking erkennen
     def toggle_room(self, room_name):
@@ -83,14 +90,20 @@ class SmartHomeUI:
         if room_name in self.rooms:
             self.selected_room = room_name
 
-    # -------- Hintergrund-Farbverlauf --------
+    # -------- Hintergrund-Farbverlauf (optimiert) --------
     def draw_gradient(self, surface, top_color, bottom_color):
-        for y in range(self.HEIGHT):
-            ratio = y / self.HEIGHT
-            r = int(top_color[0] * (1 - ratio) + bottom_color[0] * ratio)
-            g = int(top_color[1] * (1 - ratio) + bottom_color[1] * ratio)
-            b = int(top_color[2] * (1 - ratio) + bottom_color[2] * ratio)
-            pygame.draw.line(surface, (r, g, b), (0, y), (self.WIDTH, y))
+        # Erstelle Gradient einmalig als Oberfläche
+        if not hasattr(self, '_gradient_cache') or self._gradient_cache is None:
+            gradient_surf = pygame.Surface((self.WIDTH, self.HEIGHT))
+            for y in range(self.HEIGHT):
+                ratio = y / self.HEIGHT
+                r = int(top_color[0] * (1 - ratio) + bottom_color[0] * ratio)
+                g = int(top_color[1] * (1 - ratio) + bottom_color[1] * ratio)
+                b = int(top_color[2] * (1 - ratio) + bottom_color[2] * ratio)
+                pygame.draw.line(gradient_surf, (r, g, b), (0, y), (self.WIDTH, y))
+            self._gradient_cache = gradient_surf
+        
+        surface.blit(self._gradient_cache, (0, 0))
 
     # -------- Raum zeichnen --------
     def draw_room(self, name, rect, active, selected):
@@ -160,8 +173,10 @@ class SmartHomeUI:
 
             # -------- ZEICHNEN --------
             if self.current_view == "HOME":
-                self.draw_gradient(self.screen, (20, 25, 40), (10, 10, 10))
-                self.screen.blit(self.floorplan, self.floorplan_pos)
+                if self.current_view == "HOME":
+                # Home View zeichnen
+                    self.draw_gradient(self.screen, (20, 25, 40), (10, 10, 10))
+                    self.screen.blit(self.floorplan, self.floorplan_pos)
 
                 for room, rect in self.room_zones.items():
                     self.draw_room(room, rect, self.rooms[room], False)
@@ -170,17 +185,21 @@ class SmartHomeUI:
                 self.schlafzimmer_view.draw()
 
 
-            # Overlay nur, wenn ein Raum ausgewählt ist
-            if self.selected_room:
-                self.draw_focus_overlay(self.room_zones[self.selected_room])
+                # Overlay nur, wenn ein Raum ausgewählt ist
+                if self.selected_room:
+                    self.draw_focus_overlay(self.room_zones[self.selected_room])
 
-            # Alle Räume zeichnen, nicht ausgewählte
-            for room, rect in self.room_zones.items():
-                if room != self.selected_room:
-                    self.draw_room(room, rect, self.rooms[room], False)
+                # Alle Räume zeichnen, nicht ausgewählte
+                for room, rect in self.room_zones.items():
+                    if room != self.selected_room:
+                        self.draw_room(room, rect, self.rooms[room], False)
 
-            #Logout Button
-            self.logout_button.draw(self.screen)
+                # Logout Button
+                self.logout_button.draw(self.screen)
+            
+            elif self.current_view == "SCHLAFZIMMER":
+                # Schlafzimmer View zeichnen
+                self.schlafzimmer_view.draw()
 
             pygame.display.flip()
 
