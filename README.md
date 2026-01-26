@@ -14,3 +14,4 @@ Git-Push:
 -test3, zusammengefügte und funktionierende Dateien
 -test4, README erstellt und unnötige Bilder gelöscht
 -test5, blinkender Cursor und Knöpfe gefixed
+-test7, erstellen eines Menüs, welches einen Abmelde und einen Beenden Knopf enthält. Bugfixing.

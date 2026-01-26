@@ -3,6 +3,8 @@
 
 import pygame
 from ui.abmeldeknopf import LogoutButton
+from ui.knopf_beenden import ExitButton
+from ui.menu_knopf import MenuButton
 
 class SmartHomeUI:
     def __init__(self):
@@ -59,8 +61,14 @@ class SmartHomeUI:
         # Aktuell ausgewählter Raum
         self.selected_room = None
         
-        #Logout Button
-        self.logout_button = LogoutButton(x=20, y=20)
+        # Menu Button
+        self.menu_button = MenuButton(x=20, y=20)
+        
+        # Logout Button (nur im Menü sichtbar)
+        self.logout_button = LogoutButton(x=20, y=90)
+        
+        # Exit Button (nur im Menü sichtbar)
+        self.exit_button = ExitButton(x=20, y=160)
 
     #Handtracking erkennen
     def toggle_room(self, room_name):

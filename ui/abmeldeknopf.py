@@ -5,7 +5,7 @@
 import pygame
 
 class LogoutButton:
-    def __init__(self, x, y, width=200, height=60):
+    def __init__(self, x, y, width=120, height=50):
         self.rect = pygame.Rect(x, y, width, height)
 
         # Normalzustand
@@ -20,9 +20,9 @@ class LogoutButton:
         self.current_color = self.color_normal
         self.current_text_color = self.text_normal
 
-        self.radius = 15
+        self.radius = 10
         pygame.font.init()
-        self.font = pygame.font.SysFont("Arial", 32, bold=True)
+        self.font = pygame.font.SysFont("Arial", 24, bold=True)
 
     def draw(self, screen):
         pygame.draw.rect(
