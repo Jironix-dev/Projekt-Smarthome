@@ -1,3 +1,7 @@
+#Name: Kevin Dietrich
+#Datum: 26.01.2026
+#Projekt: Smart-Home
+
 import mediapipe as mp
 
 class UserDetector:

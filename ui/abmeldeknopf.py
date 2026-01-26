@@ -1,5 +1,8 @@
-import pygame
+#Name: Kevin Dietrich
+#Datum: 26.01.2026
+#Projekt: Smart-Home
 
+import pygame
 
 class LogoutButton:
     def __init__(self, x, y, width=200, height=60):
