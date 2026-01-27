@@ -1,3 +1,7 @@
+# Name: Kevin Dietrich
+# Datum: 27.01.2026
+# Projekt: Smarthome Steuerung
+
 """Interaktiver Polygon-Editor für Raum-Zonen.
 
 Verwendung:

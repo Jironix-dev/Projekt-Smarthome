@@ -8,18 +8,9 @@ Dieses Modul erstellt die UI-Instanz und den HandTracker und startet die
 Hauptschleife. Es ist der Einstiegspunkt (`__main__`).
 """
 
-from ui.userinterface import SmartHomeUI
-from vision.handtracking import HandTracker
-import threading
-
+from vision.anzeigefenster import AnzeigeFenster
 
 if __name__ == "__main__":
-    # UI erstellen
-    app = SmartHomeUI()
-
-    # HandTracker erstellen und mit der UI verbinden
-    tracker = HandTracker(width=app.WIDTH, height=app.HEIGHT, ui=app)
-
-    # Hauptschleife starten (HandTracker führt das Rendering und Tracking)
-    tracker.run()
-
+    # Anzeige-Fenster (erstellt UI intern) und starten
+    window = AnzeigeFenster()
+    window.run()

@@ -1,1 +1,303 @@
 Datum     | Uhrzeit | Nutzer| Aktion
+27.01.2026|09:31:34|User 1|Anmeldung erfolgreich
+27.01.2026|09:31:34|User 1|Zu Kueche gewechselt
+27.01.2026|09:31:38|User 1|Zurück zur HOME-View
+27.01.2026|09:31:42|User 1|Zu Schlafzimmer gewechselt
+27.01.2026|09:31:44|User 1|Zurück zur HOME-View
+27.01.2026|09:31:46|User 1|Menü wurde geöffnet
+27.01.2026|09:31:48|User 1|Programm beendet
+27.01.2026|09:43:36|User 2|Anmeldung erfolgreich
+27.01.2026|09:45:36|User 2|Anmeldung erfolgreich
+27.01.2026|09:45:38|User 2|Zu Kueche gewechselt
+27.01.2026|09:45:40|User 2|Zurück zur HOME-View
+27.01.2026|09:45:42|User 2|Zu Schlafzimmer gewechselt
+27.01.2026|09:45:47|User 2|Menü wurde geöffnet
+27.01.2026|09:45:48|User 2|Abmeldeknopf wurde gedrückt
+27.01.2026|09:45:49|User 2|Abmeldung durchgeführt
+27.01.2026|09:45:51|User 1|Anmeldung erfolgreich
+27.01.2026|09:45:54|User 1|Zurück zur HOME-View
+27.01.2026|09:45:55|User 1|Zu Badezimmer gewechselt
+27.01.2026|09:45:58|User 1|Zurück zur HOME-View
+27.01.2026|09:45:59|User 1|Zu Wohnzimmer gewechselt
+27.01.2026|09:46:01|User 1|Menü wurde geöffnet
+27.01.2026|09:46:02|User 1|Programm beendet
+27.01.2026|09:56:15|User 2|Anmeldung erfolgreich
+27.01.2026|09:56:16|User 2|Zu Kueche gewechselt
+27.01.2026|09:56:25|User 2|Zurück zur HOME-View
+27.01.2026|09:56:28|User 2|Zu Schlafzimmer gewechselt
+27.01.2026|09:56:42|User 2|Menü wurde geöffnet
+27.01.2026|09:56:46|User 2|Programm beendet
+27.01.2026|09:57:54|User 1|Anmeldung erfolgreich
+27.01.2026|09:57:55|User 1|Zu Kueche gewechselt
+27.01.2026|09:57:57|User 1|Zu Kueche gewechselt
+27.01.2026|09:57:58|User 1|Zu Wohnzimmer gewechselt
+27.01.2026|09:58:00|User 1|Zu Kueche gewechselt
+27.01.2026|09:58:00|User 1|Zu Wohnzimmer gewechselt
+27.01.2026|09:58:02|User 1|Zu Kueche gewechselt
+27.01.2026|09:58:03|User 1|Zu Wohnzimmer gewechselt
+27.01.2026|09:58:05|User 1|Zu Badezimmer gewechselt
+27.01.2026|09:58:06|User 1|Zu Schlafzimmer gewechselt
+27.01.2026|09:58:08|User 1|Zurück zur HOME-View
+27.01.2026|09:58:10|User 1|Zu Schlafzimmer gewechselt
+27.01.2026|09:58:11|User 1|Zurück zur HOME-View
+27.01.2026|09:58:12|User 1|Menü wurde geöffnet
+27.01.2026|09:58:13|User 1|Programm beendet
+27.01.2026|09:58:42|User 1|Anmeldung erfolgreich
+27.01.2026|09:58:43|User 1|Zu Kueche gewechselt
+27.01.2026|09:58:44|User 1|Zu Schlafzimmer gewechselt
+27.01.2026|09:58:46|User 1|Zu Kueche gewechselt
+27.01.2026|09:58:48|User 1|Zu Badezimmer gewechselt
+27.01.2026|09:58:50|User 1|Menü wurde geöffnet
+27.01.2026|09:58:52|User 1|Programm beendet
+27.01.2026|10:02:15|User 2|Anmeldung erfolgreich
+27.01.2026|10:02:16|User 2|Zu Kueche gewechselt
+27.01.2026|10:02:28|User 2|Zurück zur HOME-View
+27.01.2026|10:02:30|User 2|Menü wurde geöffnet
+27.01.2026|10:02:31|User 2|Menü wurde geschlossen
+27.01.2026|10:02:32|User 2|Zu Badezimmer gewechselt
+27.01.2026|10:02:36|User 2|Zurück zur HOME-View
+27.01.2026|10:02:37|User 2|Menü wurde geöffnet
+27.01.2026|10:02:38|User 2|Programm beendet
+27.01.2026|10:23:40|User 2|Anmeldung erfolgreich
+27.01.2026|10:23:42|User 2|Zu Kueche gewechselt
+27.01.2026|10:23:45|User 2|Back-Geste erkannt: Zurück zur HOME-View
+27.01.2026|10:23:46|User 2|Zu Wohnzimmer gewechselt
+27.01.2026|10:23:48|User 2|Back-Geste erkannt: Zurück zur HOME-View
+27.01.2026|10:23:49|User 2|Zu Schlafzimmer gewechselt
+27.01.2026|10:23:58|User 2|Back-Geste erkannt: Zurück zur HOME-View
+27.01.2026|10:24:00|User 2|Zu Kueche gewechselt
+27.01.2026|10:24:06|User 2|Back-Geste erkannt: Zurück zur HOME-View
+27.01.2026|10:24:30|User 2|Menü wurde geöffnet
+27.01.2026|10:24:32|User 2|Programm beendet
+27.01.2026|10:26:42|User 2|Anmeldung erfolgreich
+27.01.2026|10:26:43|User 2|Zu Kueche gewechselt
+27.01.2026|10:26:49|User 2|Back-Geste erkannt: Zurück zur HOME-View
+27.01.2026|10:26:50|User 2|Zu Schlafzimmer gewechselt
+27.01.2026|10:27:07|User 2|Zurück zur HOME-View
+27.01.2026|10:27:11|User 2|Menü wurde geöffnet
+27.01.2026|10:27:13|User 2|Programm beendet
+27.01.2026|10:27:29|User 2|Anmeldung erfolgreich
+27.01.2026|10:27:32|User 2|Menü wurde geöffnet
+27.01.2026|10:27:34|User 2|Programm beendet
+27.01.2026|10:27:42|User 2|Anmeldung erfolgreich
+27.01.2026|10:27:44|User 2|Menü wurde geöffnet
+27.01.2026|10:27:45|User 2|Abmeldeknopf wurde gedrückt
+27.01.2026|10:27:46|User 2|Abmeldung durchgeführt
+27.01.2026|10:27:49|User 1|Anmeldung erfolgreich
+27.01.2026|10:27:51|User 1|Menü wurde geöffnet
+27.01.2026|10:27:52|User 1|Menü wurde geschlossen
+27.01.2026|10:27:53|User 1|Menü wurde geöffnet
+27.01.2026|10:27:54|User 1|Abmeldeknopf wurde gedrückt
+27.01.2026|10:27:55|User 1|Abmeldung durchgeführt
+27.01.2026|10:27:57|User 1|Anmeldung erfolgreich
+27.01.2026|10:27:59|User 1|Zu Kueche gewechselt
+27.01.2026|10:28:01|User 1|Zurück zur HOME-View
+27.01.2026|10:28:02|User 1|Menü wurde geöffnet
+27.01.2026|10:28:04|User 1|Programm beendet
+27.01.2026|10:30:32|User 2|Anmeldung erfolgreich
+27.01.2026|10:30:41|User 2|Zu Schlafzimmer gewechselt
+27.01.2026|10:30:46|User 2|Zurück zur HOME-View
+27.01.2026|10:30:47|User 2|Menü wurde geöffnet
+27.01.2026|10:30:49|User 2|Programm beendet
+27.01.2026|10:32:54|User None|Menü wurde geöffnet
+27.01.2026|10:32:55|User None|Abmeldeknopf wurde gedrückt
+27.01.2026|10:32:56|User None|Abmeldung durchgeführt
+27.01.2026|10:35:09|User None|Menü wurde geöffnet
+27.01.2026|10:35:10|User None|Abmeldeknopf wurde gedrückt
+27.01.2026|10:35:10|User None|Abmeldeknopf wurde gedrückt
+27.01.2026|10:35:11|User None|Abmeldung durchgeführt
+27.01.2026|10:37:16|User 2|Anmeldung erfolgreich
+27.01.2026|10:37:20|User 2|Menü wurde geöffnet
+27.01.2026|10:37:21|User 2|Abmeldeknopf wurde gedrückt
+27.01.2026|10:37:21|User 2|Abmeldung durchgeführt
+27.01.2026|10:37:27|User None|Menü wurde geöffnet
+27.01.2026|10:37:28|User None|Abmeldeknopf wurde gedrückt
+27.01.2026|10:37:29|User None|Abmeldung durchgeführt
+27.01.2026|10:41:25|User 2|Anmeldung erfolgreich
+27.01.2026|10:41:26|User 2|Zu Kueche gewechselt
+27.01.2026|10:41:28|User 2|Zurück zur HOME-View
+27.01.2026|10:41:29|User 2|Menü wurde geöffnet
+27.01.2026|10:41:30|User 2|Abmeldeknopf wurde gedrückt
+27.01.2026|10:41:33|User 1|Anmeldung erfolgreich
+27.01.2026|10:41:35|User 1|Menü wurde geöffnet
+27.01.2026|10:41:36|User 1|Abmeldeknopf wurde gedrückt
+27.01.2026|10:41:42|User 2|Anmeldung erfolgreich
+27.01.2026|10:41:44|User 2|Menü wurde geöffnet
+27.01.2026|10:41:45|User 2|Abmeldeknopf wurde gedrückt
+27.01.2026|10:41:48|User 1|Anmeldung erfolgreich
+27.01.2026|10:41:50|User 1|Menü wurde geöffnet
+27.01.2026|10:41:50|User 1|Menü wurde geschlossen
+27.01.2026|10:41:51|User 1|Menü wurde geöffnet
+27.01.2026|10:41:52|User 1|Abmeldeknopf wurde gedrückt
+27.01.2026|10:41:56|User 1|Anmeldung erfolgreich
+27.01.2026|10:41:58|User 1|Menü wurde geöffnet
+27.01.2026|10:41:59|User 1|Programm beendet
+27.01.2026|10:45:28|User 1|Anmeldung erfolgreich
+27.01.2026|10:45:31|User 1|Menü wurde geöffnet
+27.01.2026|10:45:33|User 1|Abmeldeknopf wurde gedrückt
+27.01.2026|10:45:38|User 2|Anmeldung erfolgreich
+27.01.2026|10:45:40|User 2|Zu Kueche gewechselt
+27.01.2026|10:45:43|User 2|Zurück zur HOME-View
+27.01.2026|10:45:44|User 2|Menü wurde geöffnet
+27.01.2026|10:45:45|User 2|Programm beendet
+27.01.2026|10:48:04|User 1|Anmeldung erfolgreich
+27.01.2026|10:48:07|User 1|Menü wurde geöffnet
+27.01.2026|10:48:08|User 1|Abmeldeknopf wurde gedrückt
+27.01.2026|10:48:12|User 2|Anmeldung erfolgreich
+27.01.2026|10:48:14|User 2|Menü wurde geöffnet
+27.01.2026|10:48:16|User 2|Programm beendet
+27.01.2026|10:50:23|User 2|Anmeldung erfolgreich
+27.01.2026|10:50:26|User 2|Menü wurde geöffnet
+27.01.2026|10:50:28|User 2|Programm beendet
+27.01.2026|10:51:55|User 1|Anmeldung erfolgreich
+27.01.2026|10:51:58|User 1|Menü wurde geöffnet
+27.01.2026|10:52:00|User 1|Programm beendet
+27.01.2026|10:53:50|User 1|Anmeldung erfolgreich
+27.01.2026|10:53:54|User 1|Menü wurde geöffnet
+27.01.2026|10:53:55|User 1|Abmeldeknopf wurde gedrückt
+27.01.2026|10:53:58|User 2|Anmeldung erfolgreich
+27.01.2026|10:53:59|User 2|Menü wurde geöffnet
+27.01.2026|10:54:00|User 2|Abmeldeknopf wurde gedrückt
+27.01.2026|10:54:06|User 1|Anmeldung erfolgreich
+27.01.2026|10:54:08|User 1|Menü wurde geöffnet
+27.01.2026|10:54:09|User 1|Programm beendet
+27.01.2026|10:55:13|User 2|Anmeldung erfolgreich
+27.01.2026|10:55:15|User 2|Menü wurde geöffnet
+27.01.2026|10:55:17|User 2|Abmeldeknopf wurde gedrückt
+27.01.2026|10:55:18|User 1|Anmeldung erfolgreich
+27.01.2026|10:55:20|User 1|Menü wurde geöffnet
+27.01.2026|10:55:21|User 1|Abmeldeknopf wurde gedrückt
+27.01.2026|10:55:24|User 2|Anmeldung erfolgreich
+27.01.2026|10:55:26|User 2|Menü wurde geöffnet
+27.01.2026|10:55:26|User 2|Abmeldeknopf wurde gedrückt
+27.01.2026|10:55:28|User 1|Anmeldung erfolgreich
+27.01.2026|10:55:29|User 1|Menü wurde geöffnet
+27.01.2026|10:55:31|User 1|Programm beendet
+27.01.2026|11:02:06|User 2|Anmeldung erfolgreich
+27.01.2026|11:02:09|User 2|Menü wurde geöffnet
+27.01.2026|11:02:10|User 2|Abmeldeknopf wurde gedrückt
+27.01.2026|11:02:12|User 2|Abmeldung durchgeführt
+27.01.2026|11:02:17|User None|Menü wurde geöffnet
+27.01.2026|11:02:18|User None|Abmeldeknopf wurde gedrückt
+27.01.2026|11:02:19|User None|Abmeldung durchgeführt
+27.01.2026|11:02:22|User None|Zu Wohnzimmer gewechselt
+27.01.2026|11:02:25|User None|Menü wurde geöffnet
+27.01.2026|11:02:26|User None|Programm beendet
+27.01.2026|11:05:21|User 2|Anmeldung erfolgreich
+27.01.2026|11:05:23|User 2|Menü wurde geöffnet
+27.01.2026|11:05:24|User 2|Abmeldeknopf wurde gedrückt
+27.01.2026|11:05:25|User 2|Abmeldung durchgeführt
+27.01.2026|11:05:30|User None|Menü wurde geöffnet
+27.01.2026|11:05:31|User None|Programm beendet
+27.01.2026|11:10:02|User 2|Anmeldung erfolgreich
+27.01.2026|11:10:04|User 2|Menü wurde geöffnet
+27.01.2026|11:10:05|User 2|Abmeldeknopf wurde gedrückt
+27.01.2026|11:10:05|User 2|Abmeldeknopf wurde gedrückt
+27.01.2026|11:10:05|User 2|Abmeldeknopf wurde gedrückt
+27.01.2026|11:10:06|User 2|Abmeldung durchgeführt
+27.01.2026|11:10:11|User None|Menü wurde geöffnet
+27.01.2026|11:10:12|User None|Abmeldeknopf wurde gedrückt
+27.01.2026|11:10:12|User None|Abmeldeknopf wurde gedrückt
+27.01.2026|11:10:14|User None|Abmeldung durchgeführt
+27.01.2026|11:10:19|User None|Menü wurde geöffnet
+27.01.2026|11:10:20|User None|Abmeldeknopf wurde gedrückt
+27.01.2026|11:10:20|User None|Abmeldeknopf wurde gedrückt
+27.01.2026|11:10:20|User None|Abmeldeknopf wurde gedrückt
+27.01.2026|11:10:20|User None|Abmeldeknopf wurde gedrückt
+27.01.2026|11:10:21|User None|Abmeldung durchgeführt
+27.01.2026|11:10:26|User None|Menü wurde geöffnet
+27.01.2026|11:10:27|User None|Programm beendet
+27.01.2026|11:17:56|User 2|Anmeldung erfolgreich
+27.01.2026|11:18:03|User 2|Menü wurde geöffnet
+27.01.2026|11:18:04|User 2|Abmeldeknopf wurde gedrückt
+27.01.2026|11:18:04|User 2|Abmeldeknopf wurde gedrückt
+27.01.2026|11:18:04|User 2|Abmeldeknopf wurde gedrückt
+27.01.2026|11:18:04|User 2|Abmeldeknopf wurde gedrückt
+27.01.2026|11:18:04|User 2|Abmeldeknopf wurde gedrückt
+27.01.2026|11:18:05|User 2|Abmeldung durchgeführt
+27.01.2026|11:22:13|User 2|Anmeldung erfolgreich
+27.01.2026|11:22:18|User 2|Menü wurde geöffnet
+27.01.2026|11:22:19|User 2|Abmeldeknopf wurde gedrückt
+27.01.2026|11:22:21|User 2|Abmeldung durchgeführt
+27.01.2026|11:22:25|User None|Zu Schlafzimmer gewechselt
+27.01.2026|11:23:11|User 2|Anmeldung erfolgreich
+27.01.2026|11:23:13|User 2|Menü wurde geöffnet
+27.01.2026|11:23:14|User 2|Abmeldeknopf wurde gedrückt
+27.01.2026|11:23:15|User 2|Abmeldung durchgeführt
+27.01.2026|11:23:33|User 1|Anmeldung erfolgreich
+27.01.2026|11:23:36|User 1|Menü wurde geöffnet
+27.01.2026|11:23:37|User 1|Abmeldeknopf wurde gedrückt
+27.01.2026|11:23:40|User 2|Anmeldung erfolgreich
+27.01.2026|11:23:42|User 2|Menü wurde geöffnet
+27.01.2026|11:23:43|User 2|Abmeldeknopf wurde gedrückt
+27.01.2026|11:23:44|User 2|Anmeldung erfolgreich
+27.01.2026|11:23:47|User 2|Menü wurde geöffnet
+27.01.2026|11:23:49|User 2|Programm beendet
+27.01.2026|11:29:36|User 1|Anmeldung erfolgreich
+27.01.2026|11:29:38|User 1|Menü wurde geöffnet
+27.01.2026|11:29:39|User 1|Abmeldeknopf wurde gedrückt (pending)
+27.01.2026|11:29:40|User 1|Abmeldung durchgeführt
+27.01.2026|11:29:45|User None|Zu Schlafzimmer gewechselt
+27.01.2026|11:29:46|User None|Zurück zur HOME-View
+27.01.2026|11:29:51|User None|Zu Wohnzimmer gewechselt
+27.01.2026|11:33:50|User 2|Anmeldung erfolgreich
+27.01.2026|11:33:55|User 2|Menü wurde geöffnet
+27.01.2026|11:33:56|User 2|Abmeldeknopf wurde gedrückt (pending)
+27.01.2026|11:33:59|User 2|Abmeldung durchgeführt
+27.01.2026|11:34:01|User 1|Anmeldung erfolgreich
+27.01.2026|11:34:05|User 1|Menü wurde geöffnet
+27.01.2026|11:34:07|User 1|Abmeldeknopf wurde gedrückt (pending)
+27.01.2026|11:34:10|User 1|Abmeldung durchgeführt
+27.01.2026|11:34:13|User 1|Anmeldung erfolgreich
+27.01.2026|11:34:15|User 1|Menü wurde geöffnet
+27.01.2026|11:34:16|User 1|Abmeldeknopf wurde gedrückt (pending)
+27.01.2026|11:34:20|User 1|Abmeldung durchgeführt
+27.01.2026|11:34:26|User 1|Anmeldung erfolgreich
+27.01.2026|11:34:29|User 1|Menü wurde geöffnet
+27.01.2026|11:34:31|User 1|Programm beendet
+27.01.2026|11:36:47|User 1|Anmeldung erfolgreich
+27.01.2026|11:36:50|User 1|Menü wurde geöffnet
+27.01.2026|11:36:51|User 1|Abmeldeknopf wurde gedrückt (pending)
+27.01.2026|11:36:52|User 1|Abmeldung durchgeführt
+27.01.2026|11:36:55|User 1|Anmeldung erfolgreich
+27.01.2026|11:36:57|User 1|Menü wurde geöffnet
+27.01.2026|11:36:58|User 1|Abmeldeknopf wurde gedrückt (pending)
+27.01.2026|11:37:02|User 1|Abmeldung durchgeführt
+27.01.2026|11:37:04|User 2|Anmeldung erfolgreich
+27.01.2026|11:37:06|User 2|Menü wurde geöffnet
+27.01.2026|11:37:07|User 2|Abmeldeknopf wurde gedrückt (pending)
+27.01.2026|11:37:08|User 2|Abmeldung durchgeführt
+27.01.2026|11:37:10|User 2|Anmeldung erfolgreich
+27.01.2026|11:37:12|User 2|Zu Badezimmer gewechselt
+27.01.2026|11:37:14|User 2|Menü wurde geöffnet
+27.01.2026|11:37:15|User 2|Abmeldeknopf wurde gedrückt (pending)
+27.01.2026|11:37:15|User 2|Abmeldung durchgeführt
+27.01.2026|11:37:17|User 1|Anmeldung erfolgreich
+27.01.2026|11:37:18|User 1|Zurück zur HOME-View
+27.01.2026|11:37:19|User 1|Zu Wohnzimmer gewechselt
+27.01.2026|11:37:21|User 1|Zurück zur HOME-View
+27.01.2026|11:37:22|User 1|Zu Kueche gewechselt
+27.01.2026|11:37:23|User 1|Zurück zur HOME-View
+27.01.2026|11:37:24|User 1|Zu Schlafzimmer gewechselt
+27.01.2026|11:37:25|User 1|Menü wurde geöffnet
+27.01.2026|11:37:26|User 1|Abmeldeknopf wurde gedrückt (pending)
+27.01.2026|11:37:27|User 1|Abmeldung durchgeführt
+27.01.2026|11:37:28|User 2|Anmeldung erfolgreich
+27.01.2026|11:37:30|User 2|Menü wurde geöffnet
+27.01.2026|11:37:31|User 2|Programm beendet
+27.01.2026|11:41:32|User 1|Anmeldung erfolgreich
+27.01.2026|11:41:34|User 1|Menü wurde geöffnet
+27.01.2026|11:41:35|User 1|Abmeldeknopf wurde gedrückt (pending)
+27.01.2026|11:41:36|User 1|Abmeldung durchgeführt
+27.01.2026|11:41:41|User 1|Anmeldung erfolgreich
+27.01.2026|11:41:43|User 1|Menü wurde geöffnet
+27.01.2026|11:41:44|User 1|Abmeldeknopf wurde gedrückt (pending)
+27.01.2026|11:41:45|User 1|Abmeldung durchgeführt
+27.01.2026|11:41:53|User 1|Anmeldung erfolgreich
+27.01.2026|11:42:59|User 2|Anmeldung erfolgreich
+27.01.2026|11:43:01|User 2|Menü wurde geöffnet
+27.01.2026|11:43:02|User 2|Abmeldeknopf wurde gedrückt (pending)
+27.01.2026|11:43:03|User 2|Abmeldung durchgeführt
+27.01.2026|11:43:06|User 2|Anmeldung erfolgreich
+27.01.2026|11:43:08|User 2|Menü wurde geöffnet
+27.01.2026|11:43:11|User 2|Programm beendet
