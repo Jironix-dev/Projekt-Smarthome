@@ -320,7 +320,7 @@ class SmartHomeUI:
         running = True
         while running:
             self.clock.tick(60)
-
+            
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False

@@ -4,7 +4,8 @@
 
 import pygame
 from ui.zuruck_knopf import BackButton
-
+from widgets.light import LightWidget
+from widgets.rollo import RolloWidget
 
 class KuecheView:
     def __init__(self, ui):
@@ -26,6 +27,11 @@ class KuecheView:
         back_button_x = self.menu_button.rect.x + self.menu_button.rect.width + 10  # 10px Abstand
         back_button_y = self.menu_button.rect.y
         self.back_button = BackButton(x=back_button_x, y=back_button_y, width=80, height=60)
+        #Licht-Widget erzeugen
+        self.light_widget = LightWidget(100, 200, name="Kueche Licht")
+        #Rollo-Widget erzeugen
+        self.rollo_widget = RolloWidget(100, 400, name="Kueche Rollo")
+
 
     def draw(self):
         # Hintergrund
@@ -36,6 +42,12 @@ class KuecheView:
 
         # Zurück-Button zeichnen
         self.back_button.draw(self.screen)
+
+        #Licht Widget zeichnen
+        self.light_widget.draw(self.screen)
+
+        #Rollo Widget zeichnen
+        self.rollo_widget.draw(self.screen)
 
     def handle_click(self, pos):
         if self.back_button.is_clicked(pos[0], pos[1]):

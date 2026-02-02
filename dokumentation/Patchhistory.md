@@ -28,4 +28,10 @@ Version 1.0.1:
 -Bugfix: Die Räume von der Home-Ansicht waren auch innerhalb eines anderen Raumes auswählbar, dies ist jetzt nicht mehr der Fall.
 -Änderungen:
     -Login Screen wurde verändert, dass dieser schöner und übersichtlicher aussieht.
+Version 1.1:
+- Erstellung der Widgets für Licht und Rollos (light.py & rollo.py)
+- Integrierung der Widgets in alle Räume
+- Anpassung der Steuerung der Widgets und Designänderungen
+- Integrierung der Dimmfunktion und der Zwischenstufe der Rollos
+- Änderungen von Dimmen bzw. Rollostufe werden gespeichert bei Verlassen des Raumes
     

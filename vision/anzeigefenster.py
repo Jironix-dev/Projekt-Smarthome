@@ -99,6 +99,41 @@ class AnzeigeFenster:
             pinch_active = res.get("pinch_active")
             pinch_start = res.get("pinch_start")
             touching = res.get("touching")
+            
+            #Widget Steuerung, wenn man den den Raum öffnet
+            if self.ui.current_view == "SCHLAFZIMMER":
+                self.ui.schlafzimmer_view.rollo_widget.handle_gesture(cursor, pinch_start, pinch_active)
+                self.ui.schlafzimmer_view.light_widget.handle_gesture(
+                    cursor,
+                    pinch_start,
+                    pinch_active
+                )
+
+            if self.ui.current_view == "WOHNZIMMER":
+                self.ui.wohnzimmer_view.rollo_widget.handle_gesture(cursor, pinch_start, pinch_active)
+                self.ui.wohnzimmer_view.light_widget.handle_gesture(
+                    cursor,
+                    pinch_start,
+                    pinch_active
+                )
+
+            if self.ui.current_view == "KUECHE":
+                self.ui.kueche_view.rollo_widget.handle_gesture(cursor, pinch_start, pinch_active)
+                self.ui.kueche_view.light_widget.handle_gesture(
+                    cursor,
+                    pinch_start,
+                    pinch_active
+                )
+
+            if self.ui.current_view == "BADEZIMMER":
+                self.ui.badezimmer_view.rollo_widget.handle_gesture(cursor, pinch_start, pinch_active)
+                self.ui.badezimmer_view.light_widget.handle_gesture(
+                    cursor,
+                    pinch_start,
+                    pinch_active
+                )
+            
+            
 
             hands_in_frame = bool(result.multi_hand_landmarks) if result is not None else False
             # Pending logout: Abmelden wenn Hand verschwunden
