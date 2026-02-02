@@ -25,13 +25,15 @@ Test9:
 Version 1.0:
 Die Anzeige funktioniert komplett mit dem Wechsel zwischen den Räumen, die Räume sind überall anwählbar. Wir haben einen Zurück Knopf in den Räumen und ein Menü mit dem man sich Abmelden und das Programm auch beenden kann.
 Version 1.0.1:
--Bugfix: Die Räume von der Home-Ansicht waren auch innerhalb eines anderen Raumes auswählbar, dies ist jetzt nicht mehr der Fall.
+-Bugfix: 
+    -Die Räume von der Home-Ansicht waren auch innerhalb eines anderen Raumes auswählbar, dies ist jetzt nicht mehr der Fall.
 -Änderungen:
     -Login Screen wurde verändert, dass dieser schöner und übersichtlicher aussieht.
 Version 1.1:
-- Erstellung der Widgets für Licht und Rollos (light.py & rollo.py)
-- Integrierung der Widgets in alle Räume
-- Anpassung der Steuerung der Widgets und Designänderungen
-- Integrierung der Dimmfunktion und der Zwischenstufe der Rollos
-- Änderungen von Dimmen bzw. Rollostufe werden gespeichert bei Verlassen des Raumes
-    
+    - Erstellung der Widgets für Licht und Rollos (light.py & rollo.py)
+    - Integrierung der Widgets in alle Räume
+    - Anpassung der Steuerung der Widgets und Designänderungen
+    - Integrierung der Dimmfunktion und der Zwischenstufe der Rollos
+    - Änderungen von Dimmen bzw. Rollostufe werden gespeichert bei Verlassen des Raumes
+Version 1.2:
+    - Kameraanzeige repariert, ist wieder korrekt in der unteren rechten Ecke sichtbar.

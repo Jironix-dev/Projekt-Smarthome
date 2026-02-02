@@ -17,9 +17,7 @@ KAMERA_ANZEIGE_AKTIV = 0
 
 class KameraAnzeige:
     def __init__(self, fenster_breite, fenster_hoehe):
-        self.fenster_breite = fenster_breite
-        self.fenster_hoehe = fenster_hoehe
-
+        # Die übergebenen Fenstermaße werden hier nicht benötigt
         # Größe des Mini-Feeds (Aspect Ratio beibehalten)
         self.feed_width = 200
         self.feed_height = 150
@@ -36,24 +34,33 @@ class KameraAnzeige:
         if not KAMERA_ANZEIGE_AKTIV:
             return
 
-        # Skaliere das RGB-Frame-Bild
+        # Skaliere das RGB-Frame-Bild auf die gewünschte Feed-Größe
+        if rgb_frame is None:
+            return
+
         small_frame = cv2.resize(rgb_frame, (self.feed_width, self.feed_height))
 
-        # Konvertiere NumPy Array zu pygame Surface
-        # RGB ist das richtige Format für pygame surfarray
-        small_surface = pygame.surfarray.make_surface(small_frame.transpose((1, 0, 2)))
+        # Erzeuge pygame Surface (einfach, zuverlässig)
+        try:
+            buf = small_frame.astype('uint8').tobytes()
+            small_surface = pygame.image.frombuffer(buf, (self.feed_width, self.feed_height), 'RGB')
+            small_surface = small_surface.convert()
+        except Exception:
+            # Fallback auf surfarray (Transpose nötig)
+            small_surface = pygame.surfarray.make_surface(small_frame.transpose((1, 0, 2)))
+            small_surface = small_surface.convert()
 
-        # Position in der unteren rechten Ecke
-        pos_x = self.fenster_breite - self.feed_width - 10
-        pos_y = self.fenster_hoehe - self.feed_height - 10
+        # Positioniere in der unteren rechten Ecke basierend auf der echten Screen-Größe
+        margin_right = 10
+        margin_bottom = 10
+        screen_w, screen_h = screen.get_size()
+        feed_w, feed_h = small_surface.get_size()
 
-        # Zeichne einen Rahmen um den Feed
-        pygame.draw.rect(
-            screen,
-            (255, 255, 255),
-            (pos_x - 2, pos_y - 2, self.feed_width + 4, self.feed_height + 4),
-            2,
-        )
+        pos_x = max(0, screen_w - feed_w - margin_right)
+        pos_y = max(0, screen_h - feed_h - margin_bottom)
+
+        # Rahmen um den Feed
+        pygame.draw.rect(screen, (255, 255, 255), (pos_x - 2, pos_y - 2, feed_w + 4, feed_h + 4), 2)
 
         # Zeichne das Bild
         screen.blit(small_surface, (pos_x, pos_y))
