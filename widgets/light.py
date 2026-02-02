@@ -39,8 +39,16 @@ class LightWidget:
     # Zeichnen
     # ---------------------------------------------------------
     def draw(self, screen):
-        # Widget Hintergrund
-        bg_color = (255, 230, 140) if self.is_on else (70, 70, 70)
+        # Widget Hintergrund - mit Helligkeitsanpassung
+        if self.is_on:
+            # Farbe basierend auf Helligkeit anpassen (von grau bis gelb)
+            brightness_factor = self.brightness / 100
+            base_r = int(70 + (255 - 70) * brightness_factor)
+            base_g = int(70 + (230 - 70) * brightness_factor)
+            base_b = int(70 + (140 - 70) * brightness_factor)
+            bg_color = (base_r, base_g, base_b)
+        else:
+            bg_color = (70, 70, 70)
         pygame.draw.rect(screen, bg_color, self.rect, border_radius=12)
 
        # Hover-Randfarbe
@@ -122,12 +130,13 @@ class LightWidget:
             rel_x = max(0, min(self.slider_rect.width, rel_x))
             self.brightness = int((rel_x / self.slider_rect.width) * 100)
 
-        #letzte Helligkeit speichern
-        if self.brightness > 0:
-            self.last_brightness = self.brightness
+            #letzte Helligkeit speichern
+            if self.brightness > 0:
+                self.last_brightness = self.brightness
 
-        # Wenn Helligkeit 0 → Licht aus + Slider schließen
-            if self.brightness == 0:
+            # Wenn Helligkeit 0 → Licht aus + Slider schließen
+            if self.brightness <= 0:
+                self.brightness = 0
                 self.is_on = False
                 self.slider_open = False
 

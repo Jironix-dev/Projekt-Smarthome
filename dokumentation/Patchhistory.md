@@ -37,3 +37,9 @@ Version 1.1:
     - Änderungen von Dimmen bzw. Rollostufe werden gespeichert bei Verlassen des Raumes
 Version 1.2:
     - Kameraanzeige repariert, ist wieder korrekt in der unteren rechten Ecke sichtbar.
+
+Version 1.3:
+-Designverbesserung der Widgets beu Rollo und Licht
+-Dimmung des Lichtwidget bei Dimmung
+-Rolloanimation beim Rollowidget
+- Wenn Dimmung oder Rollo auf 0% gestellt wird, dann schaltet er auf geschlossen um

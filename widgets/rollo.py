@@ -31,16 +31,30 @@ class RolloWidget:
             self.rect.height
         )
 
-        self.slider_open = False
+        self.slider_open = self.is_open  # Slider zeigen wenn Rollo offen ist
         self.is_hovered = False
 
         pygame.font.init()
         self.font = pygame.font.SysFont("Arial", 24)
 
     def draw(self, screen):
-        # Hintergrundfarbe je nach Zustand
-        bg_color = (180, 180, 180) if self.is_open else (60, 60, 60)
+        # Hintergrund basierend auf Zustand
+        if self.is_open:
+            bg_color = (100, 180, 255)
+        else:
+            bg_color = (60, 60, 60)
         pygame.draw.rect(screen, bg_color, self.rect, border_radius=12)
+
+        # Graue Füllung oben basierend auf Position (nur wenn offen)
+        if self.is_open:
+            fill_height = int(((100 - self.position) / 100) * self.rect.height)
+            fill_rect = pygame.Rect(
+                self.rect.x,
+                self.rect.y,
+                self.rect.width,
+                fill_height
+            )
+            pygame.draw.rect(screen, (60, 60, 60), fill_rect, border_radius=12)
 
         # Lamellen-Look
         for i in range(5):
@@ -67,7 +81,7 @@ class RolloWidget:
 
         # Vertikaler Slider
         if self.slider_open:
-            pygame.draw.rect(screen, (50, 50, 50), self.slider_rect, border_radius=10)
+            pygame.draw.rect(screen, (100, 180, 255), self.slider_rect, border_radius=10)
             pygame.draw.rect(screen, (200, 200, 200), self.slider_rect, 2, border_radius=10)
 
             # Füllhöhe berechnen (oben = 100%, unten = 0%)
@@ -81,7 +95,7 @@ class RolloWidget:
                 self.slider_rect.width,
                 fill_height
             )
-            pygame.draw.rect(screen, (100, 180, 255), fill_rect, border_radius=10)
+            pygame.draw.rect(screen, (60, 60, 60), fill_rect, border_radius=10)
 
             # Griff (horizontaler Strich)
             handle_y = self.slider_rect.y + int((100 - self.position) / 100 * self.slider_rect.height)
@@ -121,14 +135,18 @@ class RolloWidget:
             rel_y = cy - self.slider_rect.y
             rel_y = max(0, min(self.slider_rect.height, rel_y))
 
-            self.position = 100 -int((rel_y / self.slider_rect.height) * 100)
+            self.position = 100 - int((rel_y / self.slider_rect.height) * 100)
 
             if self.position > 0:
                 self.last_position = self.position
 
-            if self.position == 0:
+            # Wenn Slider zu 0% → Rollo schließen
+            if self.position <= 2:
+                self.position = 0
                 self.is_open = False
                 self.slider_open = False
+
+            return
 
             return
 
