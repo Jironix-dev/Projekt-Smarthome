@@ -1,5 +1,7 @@
+# __Project Smarthome__
+
 We did this Project in School.
-This was supposed to be a Smart-Home Control, we did it this way:
+This is supposed to be a Smart-Home Control, we did it this way:
 - You have 2 different hand gestures to Login to the App
 - If you Login you get to the floorplan of the House.
 - Your Index Finger and your Thumb form the controls, the Cursor is the Tip of the Thumb and if you want to "click" something you pinch your Indexfinger and your TThumb together
